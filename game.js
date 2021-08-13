@@ -149,14 +149,14 @@ class Dealer extends Player {
     }
 }
 
-let player = null;
+let player1 = null;
 let dealer = null;
 let currentTurn = 1;
 
 // FIXME: This may not be used
 let whosTurnIsIt = () => {
     // A way of seeing who is currently going
-    return  currentTurn == 1 ? player : dealer;
+    return  currentTurn == 1 ? player1 : dealer;
 }
 
 let changeTurns = () => {
@@ -205,5 +205,18 @@ let checkForWinner = () => {
         // All of the player's money is gone. Game totally over
         // You won the game! Congradulations!
         // Update game buttons to start new game (e.g, "Play again?")
+    }
+}
+
+// Screen that shows the rules of the game
+let showInstructions = (show) => {
+    // This is used to open or close the instructions screen.
+    if(show) {
+        let rules = `
+            This is Blackjack. You are the player. The dealer is the computer. blah blah blah 
+            blah blah
+        `;
+    } else {
+    
     }
 }
