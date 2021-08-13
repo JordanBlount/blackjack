@@ -177,3 +177,33 @@ let totalReset = () => {
     currentTurn = 1;
     // Open intro screen
 }
+
+let hit = () => {
+    let player = whosTurnIsIt();
+}
+
+let hold = () => {
+    let player = whosTurnIsIt();
+}
+
+let checkForWinner = () => {
+    if(!player.isBroke()) {
+        // This is the logic for checking if someone has won the current
+        // round
+        if(player.isBusted() && !dealer.isBusted()) {
+            // Dealer wins
+            // Send "You lose message"
+            // Update module or buttons (to be able to prompt for next round)
+        } else if(dealer.isBusted() && !player.isBusted()) {
+            // Player wins
+            // Send "You lose message"
+            // Update module or buttons (to be able to prompt for next round)
+        } else {
+            // This should never ever happen.
+        }
+    } else {
+        // All of the player's money is gone. Game totally over
+        // You won the game! Congradulations!
+        // Update game buttons to start new game (e.g, "Play again?")
+    }
+}
