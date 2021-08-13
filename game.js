@@ -61,10 +61,11 @@ class Player {
     // We want to give the player a name, the current cards in their hand,
     // and what is their turn which I may give them based on their current
     // position in the players' array (if I add multiple players)
-    constructor(name, hand, cash, isDealer) {
+    constructor(name, hand, cash, bet, isDealer) {
         this.name = name;
         this.hand = hand;
         this.cash = cash;
+        this.bet = bet;
         this.isDealer = isDealer;
     }
 
@@ -113,11 +114,25 @@ class Player {
         return this.handTotal() >= 21;
     }
 
+    isBroke() {
+        return this.cash <= 0;
+    }
+
     addCards(cards) {
         return this.hand.push(cards);
     }
-
     
+    setBet(bet) {
+        this.bet = bet;
+    }
+
+    currentBet() {
+        return this.bet;
+    }
+
+    get cash() {
+        return this.cash;
+    }
 }
 
 class Dealer extends Player {
@@ -134,91 +149,31 @@ class Dealer extends Player {
     }
 }
 
-let players = [];
-let losers = [];
+let player = null;
+let dealer = null;
 let currentTurn = 1;
 
-let dealer = new Dealer("Dealer", [], true);
-
-// The dealer will be played by the computer through methods of giving out
-// cards and things like that
-// and things 
-
-let getLosers = () => {
-    return losers;
-}
-
+// FIXME: This may not be used
 let whosTurnIsIt = () => {
     // A way of seeing who is currently going
-    return  players[currentTurn - 1];
+    return  currentTurn == 1 ? player : dealer;
 }
 
 let changeTurns = () => {
-    // This is pretty much saying, if the current turn is greater than the number of players left,
-    // it should go back to 1. Otherwise, it should increase by one
-    // FIXME: Check to see if any issues arrise when a player is removed out of the array if they "bust".
-    //        Ideally, it should just move to the next player who is still in the array because they have not "busted" yet.
-    return currentTurn >= players.length ? currentTurn = 1 : currentTurn++;
+    return currentTurn == 1 ? currentTurn == 2 : currentTurn == 1;
 }
 
-let checkToSeeIfBusted = (player) => {
-    if(player.isBusted()) {
-        // Adds player to losers (those who have busted)
-        losers.push(player);
-        // Removes player from current players
-        players.shift(players.indexOf(player), 1);
-    } 
+let resetForNewRound = () => {
+    deck = createDeck();
+    currentTurn = 1;
+
+    // Remove any winning notifications or things like that
 }
 
-let round = () => {
-    // Check for any winning conditions before continuing game
-
-    // Allow dealer to put up new cards
-        // Face down card
-        // Face up card
-
-    // Players can select cards
-
-    // If player bust, remove them from the array and continue 
-    // with players that are alive. I could add the "losers" to a
-    // losers' array
-
-
-    // WINNING CONDITIONS
-
-    // If the dealer bust, all of the players left should win
-    // 
-    if(!dealer.isBusted()) {
-        // Checks to make sure that a least one player is still in the game
-        if(players.length > 0) {
-            
-        } else {
-            // If all players have busted then the game should end
-            // This also means that the dealer has "won"
-            endGame();
-        }
-    } else {
-        // Game should now end and we will check to see who was still 
-        // left
-        endGame();
-    }
-}
-
-let turn = (player) => {
-    if(!dealer.isBusted()) {
-        // FIXME: Move this to the right location. Should be called when 
-        // dealer is going to give out cards to player
-        let twoCards = dealer.dealCardsToPlayer(player, null);
-        // Checks to make sure that a least one player is still in the game
-        // FIXME: Need to check to see if the current player is a dealer
-        if(!player.isBusted() && !player.isDealer()) {
-            player.addCards(twoCards);
-            checkToSeeIfBusted(player);
-            changeTurns();
-        }
-    } else {
-        // Game should now end and we will check to see who was still 
-        // left
-        endGame();
-    }
+let totalReset = () => {
+    player = null;
+    dealer = null;
+    deck = null;
+    currentTurn = 1;
+    // Open intro screen
 }
