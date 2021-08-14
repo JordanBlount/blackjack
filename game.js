@@ -27,6 +27,27 @@ class Deck {
     shuffle() {
         
     }
+
+    // Removes specific card from array
+    removeCard(card) {
+        this.cards.slice(this.cards.indexOf(card), 1);
+    }
+
+    // This removes the card from the top of the deck
+    // It return the card that was removed
+    pickCardFromTop() {
+        return this.cards.shift();
+    }
+
+    // Add card to bottom of deck
+    addToBottom(card) {
+        this.cards.push(card);
+    }
+
+    // Add card to top of deck
+    addToTop(card) {
+        this.cards.unshift(card);
+    }
 }
 
 const createDeck = () => {
