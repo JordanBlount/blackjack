@@ -30,8 +30,8 @@ class Deck {
             // Goes through all 52 cards.
             // FIXME: This logic could be made better, but it works
             for(let j = 0; j < this.cards.length - 1; j++) {
-                let loc1 = Math.floor(Math.random() * this.cards.length);
-                let loc2 = Math.floor(Math.random() * this.cards.length);
+                let loc1 = Math.floor(Math.random() * (j + 1));
+                let loc2 = Math.floor(Math.random() * (j + 1));
                 let firstCard = this.cards[loc1];
     
                 // Swaps the card locations
@@ -235,11 +235,15 @@ class Dealer extends Player {
     }
 
     dealCard(deck, player) {
-        player.addCards(deck.pickCardFromTop());
+        let card = deck.pickCardFromTop();
+        console.log(`${player.name} was given a ${card.suit} [${card.value}]`)
+        player.addCards(card);
     }
 
     dealACard(deck, card, player) {
-        player.addCards(deck.giveCard(card));
+        let crd = deck.giveCard(card);
+        console.log(`${player.name} was given a ${crd.suit} [${crd.value}]`)
+        player.addCards(crd);
     }
 
 }
@@ -258,17 +262,50 @@ const whosTurnIsIt = () => {
 const changeTurns = () => {
     if(currentTurn === 1) {
          currentTurn = 2; 
+         // Update game to show whose turn it is
     } else {
         currentTurn = 1;
+        // Update game to show whose turn it is
     }
 }
 
 const hit = (player) => {
-
+    if(!player.isBusted()) {
+        dealer.dealCard(deck, player);
+        console.log(player.hand);
+        console.log(`Points: ${player.points}`);
+        // Checks to see if you have busted ater receiving a card
+        if(player.isBusted()) {
+            // TODO: Add a function to reveal the dealer's cards
+            console.log(`${player.name} busted!`);
+            checkForWinner();
+        } else {
+            changeTurns();
+            // This would be changed to "whosTurnIsIt().isDealer" to allow for multiple players
+            if(!player.isDealer) {
+                dealerMove();
+            }
+        }
+    } else {
+        // This should never happen technically
+        // ACTUALLY, this should happen if the button and pressed and you are busted
+        checkForWinner();
+    }
 }
 
 const stay = (player) => {
-
+    if(!player.isBusted()) {
+        // This means that the dealer has ended their turn and the game should now check to see who won
+        console.log(`${player.name} chose to stay!`);
+        if(player.isDealer) {
+            // TODO: Add a function to reveal the dealer's cards
+            checkForWinner();
+        } else {
+            changeTurns();
+        }
+    } else {
+        checkForWinner();
+    }
 }
 
 const dealerMove = () => {
@@ -280,60 +317,66 @@ const dealerMove = () => {
     }
 }
 
+const busted = (player) => {
+    if(player === player1) {
+        
+    } else {
+        
+    }
+}
+
 // TODO: Add a check for when someone busts here instead of it being in the "hit" function
 // FIXME: Make sure that this is accurately checking for when the player (or dealer) beats the other
 // without going over 21.
 const checkForWinner = () => {
     if(!player1.isBroke()) {
-        // This is the logic for checking if someone has won the current
-        // round
-        if(player1.points > dealer.points && !player1.isBusted()) {
-            // Player wins
-            // Send "You win message"
-            // Update module or buttons (to be able to prompt for next round)
+        if(!player1.isBusted() && dealer.isBusted()) {
             console.log("You won this round!");
             player1.addCash(player1.currentBet());
-            console.log("Current cash: " + player1.currentCash())
-            // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
-            if(player1.currentCash() === 2500 || round === 8) {
-                // Game should end
-                // Player wins!
-                // Show winning screen
-                // Prompt for new game
-            }
-        } else if(dealer.points > player1.points && !dealer.isBusted()) {
-            // Dealer wins
-            // Send "You lose message"
-            // Update module or buttons (to be able to prompt for next round)
-            console.log("You lose this round!");
+            console.log("Current cash: " + player1.currentCash());
+        } else if(player1.isBusted() && !dealer.isBusted()) {
+            console.log(`${player1.name} has busted.`);    
             player1.removeCash(player1.currentBet());
-            console.log("Current cash: " + player1.currentCash())
-            // if(player1.isBroke()) {
-            //     // Game over
-            // } else {
-            //     // Continue to next round
-            //     // Add onto round counter
-            //     round++;
-            //     resetForNewRound();
-            // }
-        } else if(player1.points === dealer.points) {
-            // It's a tie
-            // Player loses no money
+            console.log("Current cash: " + player1.currentCash());
+        } else {
+            // Neither player has busted
+            if(player1.points > dealer.points && !player1.isBusted()) {
+                // Player wins
+                // Send "You win message"
+                // Update module or buttons (to be able to prompt for next round)
+                console.log("You had a higher score than the House");
+                player1.addCash(player1.currentBet());
+                console.log("Current cash: " + player1.currentCash())
+                // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
+                if(player1.currentCash() === 2500 || round === 8) {
+                    // Game should end
+                    // Player wins!
+                    // Show winning screen
+                    // Prompt for new game
+                }
+            } else if(dealer.points > player1.points && !dealer.isBusted()) {
+                // Dealer wins
+                // Send "You lose message"
+                // Update module or buttons (to be able to prompt for next round)
+                console.log("The House had a higher score than you");
+                // if(player1.isBroke()) {
+                //     // Game over
+                // } else {
+                //     // Continue to next round
+                //     // Add onto round counter
+                //     round++;
+                //     resetForNewRound();
+                // }
+            } else if(player1.points === dealer.points) {
+                // It's a tie
+                // Player loses no money
+                console.log("You all tied");
+            }
         }
     } else {
         // All of the player's money is gone. Game totally over
         // You won the game! Congradulations!
         // Update game buttons to start new game (e.g, "Play again?")
-    }
-}
-
-const winner = () => {
-    if(!player1.isBroke()) {
-        if(!player1.isBusted()) {
-
-        }
-    } else {
-
     }
 }
 
@@ -370,8 +413,10 @@ testGame();
 const resetForNewRound = () => {
     player1.hand = [];
     player.bet = 0;
+
     dealer.hand = [];
     currentTurn = 1;
+
     deck = createDeck();
     // Remove any winning notifications or things like that
 }
