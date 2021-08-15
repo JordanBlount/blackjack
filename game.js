@@ -25,7 +25,24 @@ class Deck {
     }
 
     shuffle() {
-        
+        // Shuffles the deck 2 times
+        for(let i = 0; i < 2; i++) {
+            // Goes through all 52 cards.
+            // FIXME: This logic could be made better, but it works
+            for(let j = 0; j < this.cards.length - 1; j++) {
+                let loc1 = Math.floor(Math.random() * this.cards.length);
+                let loc2 = Math.floor(Math.random() * this.cards.length);
+                let firstCard = this.cards[loc1];
+    
+                // Swaps the card locations
+                this.cards[loc1] = this.cards[loc2];
+                this.cards[loc2] = firstCard;
+            }
+        } 
+    }
+
+    shuffle() {
+
     }
 
     // Removes specific card from array
@@ -41,6 +58,15 @@ class Deck {
     // It return the card that was removed
     pickCardFromTop() {
         return this.cards.shift();
+    }
+
+    amountOfCard(cardVal) {
+        return this.cards.reduce((total, card) => {
+            if(card.value === cardVal) {
+                total += 1;
+            }
+            return total;
+        }, 0);
     }
 }
 
@@ -64,10 +90,6 @@ const createDeck = () => {
     });
     return new Deck(cards);
 }
-
-let deck = createDeck();
-console.log(deck.cards[12]);
-console.log(deck.cards[12].isAce());
 
 class Player {
 
@@ -143,14 +165,14 @@ class Player {
             let aces = this.amountOfAces();
             // If there are 1 or more Aces already in the player's hand, add 1 point
             if(aces >= 1) {
-                this.points += 1;
+                this.points += card.points[0];
             } else {
                 // If adding one Ace brings the points above 21, add 1 point only
                 if((this.points + 11) > 21) {
-                    this.points += 1;
+                    this.points += card.points[0];
                 // otherwise, add 11
                 } else {
-                    this.points += 11;
+                    this.points += card.points[1];
                 }
             }
         }
@@ -160,13 +182,13 @@ class Player {
         // If multiple cards are added
         if(Array.isArray(cards)) {
             cards.map(card => {
-                console.log("Added multiple cards");
+                // console.log("Added multiple cards");
                 this.addPoints(card)
                 this.hand.push(card);
             });   
         } else {
             // Adds a single card
-            console.log("Added single card");
+            // console.log("Added single card");
             this.addPoints(cards);
             this.hand.push(cards);
         }
@@ -217,11 +239,11 @@ class Dealer extends Player {
         player.addCards([deck.pickCardFromTop(), deck.pickCardFromTop()]); 
     }
 
-    dealNewCard(deck, player) {
+    dealCard(deck, player) {
         player.addCards(deck.pickCardFromTop());
     }
 
-    dealCard(deck, card, player) {
+    dealACard(deck, card, player) {
         player.addCards(deck.giveCard(card));
     }
 
@@ -230,6 +252,7 @@ class Dealer extends Player {
 let player1 = null;
 let dealer = null;
 let currentTurn = 1;
+let deck = createDeck();
 
 let whosTurnIsIt = () => {
     // A way of seeing who is currently going
@@ -246,21 +269,6 @@ let changeTurns = () => {
 
 player1 = new Player("Jordan", [], 0, 100, 0, false);
 dealer = new Dealer("House", [], 0, 100, 0, true);
-
-let giveAcesTest = () => {
-    deck.cards.map(card => {
-        if(card.isAce()) {
-            dealer.dealCard(deck, card, player1);
-        }
-    });
-    // Gives the player a random card - Debugging
-    dealer.dealNewCard(deck, player1);
-}
-
-giveAcesTest();
-console.log(player1.hand);
-console.log(player1.amountOfAces());
-console.log(player1.points);
 
 let resetForNewRound = () => {
     deck = createDeck();
