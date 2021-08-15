@@ -70,9 +70,10 @@ class Player {
     // We want to give the player a name, the current cards in their hand,
     // and what is their turn which I may give them based on their current
     // position in the players' array (if I add multiple players)
-    constructor(name, hand, cash, bet, isDealer) {
+    constructor(name, hand, points, cash, bet, isDealer) {
         this.name = name;
         this.hand = hand;
+        this.points = points;
         this.cash = cash;
         this.bet = bet;
         this.isDealer = isDealer;
@@ -83,22 +84,24 @@ class Player {
     }
 
     handTotal() {
-        // Two different totals. 
         let total = 0;
         
-        // TODO: Get the value of all the cards except for aces
-        //       Determine the value of the player's hand. If that value
-        //       + the value of the amount of Aces (e.g., if there are
-        //       2 aces: 11 + 1 or 1 + 1 if the first condition would give
-        //       the player more than 21)
+        // Gets the point value for all the cards except for Aces
+        total = this.hand.reduce((amount, card) => {
+            if(card.value !== "A") {
+                amount += card.points[0];
+            }
+            return amount;
+        }, 0);
 
-        // Solutions: Use an array to remove all aces and calculate those 
-        // values
-
+        // Determine the value of the player's hand. If that value
+        // + the value of the amount of Aces (e.g., if there are
+        // 2 aces: 11 + 1 or 1 + 1 if the first condition would give
+        // the player more than 21)
         let aces = this.amountOfAces();
         if(aces > 0) {
             if((total + 11) > 21) {
-                total + aces;
+                total += aces;
             } else {
                 total += 11;
                 total += aces - 1; //This accomdates for the value of Aces
@@ -110,7 +113,6 @@ class Player {
     amountOfAces() {
         return this.hand.reduce((total, card) => {
             if(card.value === "A") {
-                console.log(card);
                 total += 1;
             }
             return total;
@@ -129,8 +131,41 @@ class Player {
         return this.cash <= 0;
     }
 
+    addPoints(card) {
+        // Adds points for all non-Ace cards
+        if(card.value !== "A") {
+            this.points += card.points[0];
+        } else {
+            let aces = this.amountOfAces();
+            // If there are 1 or more Aces already in the player's hand, add 1 point
+            if(aces >= 1) {
+                this.points += 1;
+            } else {
+                // If adding one Ace brings the points above 21, add 1 point only
+                if((this.points + 11) > 21) {
+                    this.points += 1;
+                // otherwise, add 11
+                } else {
+                    this.points += 11;
+                }
+            }
+        }
+    }
+
     addCards(cards) {
-        return this.hand.push(cards);
+        // If multiple cards are added
+        if(Array.isArray(cards)) {
+            cards.map(card => {
+                console.log("Added multiple cards");
+                this.addPoints(card)
+                this.hand.push(card);
+            });   
+        } else {
+            // Adds a single card
+            console.log("Added single card");
+            this.addPoints(cards);
+            this.hand.push(cards);
+        }
     }
     
     setBet(bet) {
@@ -152,27 +187,35 @@ class Player {
     get cashAmt() {
         return this.cash;
     }
+
+    get currentPoints() {
+        return this.points;
+    }
 }
 
 class Dealer extends Player {
-    constructor(name, hand, cash, bet, isDealer) {
-        super(name, hand, cash, bet, isDealer);
+    constructor(name, hand, points, cash, bet, isDealer) {
+        super(name, hand, points, cash, bet, isDealer);
     }
 
     dealTwoCards(cards, player) {
         player.addCards([deck.pickCardFromTop(), deck.pickCardFromTop()]); 
     }
 
-    dealCard(deck, player) {
+    dealNewCard(deck, player) {
         player.addCards(deck.pickCardFromTop());
     }
+
+    dealCard(deck, card, player) {
+        player.addCards(deck.cards[deck.cards.indexOf(card)]);
+    }
+
 }
 
 let player1 = null;
 let dealer = null;
 let currentTurn = 1;
 
-// FIXME: This may not be used
 let whosTurnIsIt = () => {
     // A way of seeing who is currently going
     return  currentTurn == 1 ? player1 : dealer;
@@ -186,23 +229,23 @@ let changeTurns = () => {
     }
 }
 
-player1 = new Player("Jordan", [], 100, 0, false);
-dealer = new Dealer("House", [], 100, 0, true);
+player1 = new Player("Jordan", [], 0, 100, 0, false);
+dealer = new Dealer("House", [], 0, 100, 0, true);
 
 let giveAcesTest = () => {
     deck.cards.map(card => {
-        if(card.isAce()) {
-            player1.addCards(card);
+        if(card.isAce()) {``
+            dealer.dealCard(deck, card, player1);
         }
     });
+    // Gives the player a random card - Debugging
+    dealer.dealNewCard(deck, player1);
 }
-
-console.log(whosTurnIsIt());
 
 giveAcesTest();
 console.log(player1.hand);
-console.log("Checking to see how many Aces");
 console.log(player1.amountOfAces());
+console.log(player1.points);
 
 let resetForNewRound = () => {
     deck = createDeck();
