@@ -49,8 +49,6 @@ const createDeck = () => {
         })
     });
 
-    // TODO: I may be able to remove this logic because I can change the
-    // way that my game works to not have to do it this way.
     cards.map(card => {
         if(card.value === "J" || card.value === "Q" || card.value === "K") {
             card.points.push(10);
@@ -112,9 +110,11 @@ class Player {
     amountOfAces() {
         return this.hand.reduce((total, card) => {
             if(card.value === "A") {
+                console.log(card);
                 total += 1;
             }
-        });
+            return total;
+        }, 0); // Has to have an initial value
     }
 
     hasAces() {
@@ -141,22 +141,30 @@ class Player {
         return this.bet;
     }
 
-    get cash() {
+    addCash(amount) {
+        this.cash += amount;
+    }
+
+    removeCash(amount) {
+        this.cash -= amount;
+    }
+
+    get cashAmt() {
         return this.cash;
     }
 }
 
 class Dealer extends Player {
-    constructor(name, hand, isDealer) {
-        super(name, hand, isDealer);
+    constructor(name, hand, cash, bet, isDealer) {
+        super(name, hand, cash, bet, isDealer);
     }
 
-    dealCardsToPlayer(player, cards) {
-        if(cards.length === 0 || cards.length < 2) {
-            return [];
-        }
-        // Should give the last two cards in the deck
-        return [cards[cards.length - 1], cards[cards.length - 2]]
+    dealTwoCards(cards, player) {
+        player.addCards([deck.pickCardFromTop(), deck.pickCardFromTop()]); 
+    }
+
+    dealCard(deck, player) {
+        player.addCards(deck.pickCardFromTop());
     }
 }
 
@@ -171,8 +179,30 @@ let whosTurnIsIt = () => {
 }
 
 let changeTurns = () => {
-    return currentTurn == 1 ? currentTurn == 2 : currentTurn == 1;
+    if(currentTurn === 1) {
+         currentTurn = 2; 
+    } else {
+        currentTurn = 1;
+    }
 }
+
+player1 = new Player("Jordan", [], 100, 0, false);
+dealer = new Dealer("House", [], 100, 0, true);
+
+let giveAcesTest = () => {
+    deck.cards.map(card => {
+        if(card.isAce()) {
+            player1.addCards(card);
+        }
+    });
+}
+
+console.log(whosTurnIsIt());
+
+giveAcesTest();
+console.log(player1.hand);
+console.log("Checking to see how many Aces");
+console.log(player1.amountOfAces());
 
 let resetForNewRound = () => {
     deck = createDeck();
