@@ -278,12 +278,12 @@ const hit = (player) => {
         // Checks to see if you have busted ater receiving a card
         if(player.isBusted()) {
             // TODO: Add a function to reveal the dealer's cards
-            checkForWinner();
+            checkForRoundWinner();
         }
     } else {
         // This should never happen technically
         // ACTUALLY, this should happen if the button and pressed and you are busted
-        checkForWinner();
+        checkForRoundWinner();
     }
 }
 
@@ -293,83 +293,133 @@ const stay = (player) => {
         // This means that the dealer has ended their turn and the game should now check to see who won
         if(player.isDealer) {
             // TODO: Add a function to reveal the dealer's cards
-            checkForWinner();
+            checkForRoundWinner();
         } else {
             // Changes the turn over to the next player (dealer)
             changeTurns();
         }
     } else {
-        checkForWinner();
+        checkForRoundWinner();
     }
+}
+
+const setupGame = (firstGame) => {
+    player1 = new Player("Player 1", [], 0, 500, 0, false);
+    dealer = new Dealer("House", [], 0, 0, 0, true);
+    deck = createDeck();
+    deck.shuffle();
+
+    dealer.dealTwoCards(deck, player1);
+    dealer.dealTwoCards(deck, dealer);
 }
 
 const dealerMove = () => {
     // This allows the computer to keep making choices until it bust or chooses to stay
+    let savedRound = round;
     while(!dealer.isBusted()) {
-        let choice = Math.floor(Math.random() * 2);
-        if(choice === 0) {
-            hit(dealer);
+        if(savedRound === round) {
+            let choice = Math.floor(Math.random() * 2);
+            if(choice === 0) {
+                hit(dealer);
+            } else {
+                stay(dealer);
+                break;
+            }   
         } else {
-            stay(dealer);
+            // This makes the loop stop completely because it was causing a problem
+            // where the computer was still trying to go even after the round ended (doing actions from previous round)
+            console.log("The loop successfully ended");
             break;
-        }   
+        }
     }
 }
 
 // TODO: Add a check for when someone busts here instead of it being in the "hit" function
 // FIXME: Make sure that this is accurately checking for when the player (or dealer) beats the other
 // without going over 21.
-const checkForWinner = () => {
+const checkForRoundWinner = () => {
     if(!player1.isBroke()) {
         if(!player1.isBusted() && dealer.isBusted()) {
-            console.log("The House busted!");
             player1.addCash(player1.currentBet());
-            console.log("Current cash: " + player1.currentCash());
+            checkIfOver();
         } else if(player1.isBusted() && !dealer.isBusted()) {
-            console.log(`${player1.name} has busted.`);    
             player1.removeCash(player1.currentBet());
-            console.log("Current cash: " + player1.currentCash());
+            checkIfOver();
         } else {
             // Neither player has busted
             if(player1.points > dealer.points && !player1.isBusted()) {
                 // Player wins
                 // Send "You win message"
                 // Update module or buttons (to be able to prompt for next round)
-                console.log("You had a higher score than the House");
                 player1.addCash(player1.currentBet());
-                console.log("Current cash: " + player1.currentCash())
-                // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
-                if(player1.currentCash() === 2500 || round === 8) {
-                    // Game should end
-                    // Player wins!
-                    // Show winning screen
-                    // Prompt for new game
-                }
+                checkIfOver();
             } else if(dealer.points > player1.points && !dealer.isBusted()) {
                 // Dealer wins
                 // Send "You lose message"
                 // Update module or buttons (to be able to prompt for next round)
-                console.log("The House had a higher score than you");
                 player1.removeCash(player1.currentBet());
-                console.log("Current cash: " + player1.currentCash());
-                // if(player1.isBroke()) {
-                //     // Game over
-                // } else {
-                //     // Continue to next round
-                //     // Add onto round counter
-                //     round++;
-                //     resetForNewRound();
-                // }
+                checkIfOver();
             } else if(player1.points === dealer.points) {
                 // It's a tie
                 // Player loses no money
                 console.log("You all tied");
+                checkIfOver();
             }
         }
     } else {
-        // All of the player's money is gone. Game totally over
-        // You won the game! Congradulations!
-        // Update game buttons to start new game (e.g, "Play again?")
+        checkIfOver();
+    }
+}
+
+
+const resetForNewRound = () => {
+    player1.hand = [];
+    player1.bet = 0;
+    player1.points = 0;
+
+    dealer.hand = [];
+    dealer.points = 0;
+    currentTurn = 1;
+
+    deck = createDeck();
+    // Remove any winning notifications or things like that
+}
+
+const totalReset = () => {
+    player = null;
+    dealer = null;
+    deck = null;
+    currentTurn = 1;
+    // Open intro screen
+}
+
+const nextRound = () => {
+    round++;
+    resetForNewRound();
+}
+
+const checkIfOver = () => {
+    // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
+    if(player1.isBroke()) {
+        gameOver();
+    } else if(round === 8 || player1.currentCash() === 2000) {
+        gameOver();
+    } else {
+        nextRound();
+    }
+}
+
+const gameOver = () => {
+    if(player1.isBroke()) {
+        // You lost the game!
+        // Play again?
+        totalReset();
+        setupGame();
+    } else {
+        // Show winning screen!
+        // Player again?
+        totalReset();
+        setupGame();
     }
 }
 
@@ -377,7 +427,7 @@ const checkForWinner = () => {
 
 // Test version of the game that runs in console For debugging purposes only.
 let testGame = () => {
-    player1 = new Player("Jordan", [], 0, 500, 0, false);
+    player1 = new Player("Player 1", [], 0, 500, 0, false);
     dealer = new Dealer("House", [], 0, 0, 0, true);
     deck = createDeck();
     deck.shuffle();
@@ -395,32 +445,11 @@ let testGame = () => {
     console.log(dealer.hand);
     console.log(`Points: ${dealer.points}`);
 
-
     stay(player1);
     console.log("###########################");
 }
 
 testGame();
-
-
-const resetForNewRound = () => {
-    player1.hand = [];
-    player.bet = 0;
-
-    dealer.hand = [];
-    currentTurn = 1;
-
-    deck = createDeck();
-    // Remove any winning notifications or things like that
-}
-
-const totalReset = () => {
-    player = null;
-    dealer = null;
-    deck = null;
-    currentTurn = 1;
-    // Open intro screen
-}
 
 // TODO: VISUALS FOR GAMES
 
