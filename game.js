@@ -262,6 +262,7 @@ const whosTurnIsIt = () => {
 const changeTurns = () => {
     if(currentTurn === 1) {
          currentTurn = 2; 
+         dealerMove();
          // Update game to show whose turn it is
     } else {
         currentTurn = 1;
@@ -277,14 +278,7 @@ const hit = (player) => {
         // Checks to see if you have busted ater receiving a card
         if(player.isBusted()) {
             // TODO: Add a function to reveal the dealer's cards
-            console.log(`${player.name} busted!`);
             checkForWinner();
-        } else {
-            changeTurns();
-            // This would be changed to "whosTurnIsIt().isDealer" to allow for multiple players
-            if(!player.isDealer) {
-                dealerMove();
-            }
         }
     } else {
         // This should never happen technically
@@ -295,12 +289,13 @@ const hit = (player) => {
 
 const stay = (player) => {
     if(!player.isBusted()) {
-        // This means that the dealer has ended their turn and the game should now check to see who won
         console.log(`${player.name} chose to stay!`);
+        // This means that the dealer has ended their turn and the game should now check to see who won
         if(player.isDealer) {
             // TODO: Add a function to reveal the dealer's cards
             checkForWinner();
         } else {
+            // Changes the turn over to the next player (dealer)
             changeTurns();
         }
     } else {
@@ -309,19 +304,15 @@ const stay = (player) => {
 }
 
 const dealerMove = () => {
-    let random = Math.floor(Math.random() * 2);
-    if(random === 0) {
-        hit(dealer);
-    } else {
-        stay(dealer);
-    }
-}
-
-const busted = (player) => {
-    if(player === player1) {
-        
-    } else {
-        
+    // This allows the computer to keep making choices until it bust or chooses to stay
+    while(!dealer.isBusted()) {
+        let choice = Math.floor(Math.random() * 2);
+        if(choice === 0) {
+            hit(dealer);
+        } else {
+            stay(dealer);
+            break;
+        }   
     }
 }
 
@@ -331,7 +322,7 @@ const busted = (player) => {
 const checkForWinner = () => {
     if(!player1.isBroke()) {
         if(!player1.isBusted() && dealer.isBusted()) {
-            console.log("You won this round!");
+            console.log("The House busted!");
             player1.addCash(player1.currentBet());
             console.log("Current cash: " + player1.currentCash());
         } else if(player1.isBusted() && !dealer.isBusted()) {
@@ -359,6 +350,8 @@ const checkForWinner = () => {
                 // Send "You lose message"
                 // Update module or buttons (to be able to prompt for next round)
                 console.log("The House had a higher score than you");
+                player1.removeCash(player1.currentBet());
+                console.log("Current cash: " + player1.currentCash());
                 // if(player1.isBroke()) {
                 //     // Game over
                 // } else {
@@ -398,12 +391,12 @@ let testGame = () => {
     console.log(`Player 1's current cash: ${player1.currentCash()} Bet: ${player1.currentBet()}`);
     console.log(player1.hand);
     console.log(`Points: ${player1.points}`);
-    console.log(`Dealer's current cash: ${dealer.currentCash()}`);
+    console.log(`House's current cash: ${dealer.currentCash()}`);
     console.log(dealer.hand);
     console.log(`Points: ${dealer.points}`);
 
 
-    hit(player1);
+    stay(player1);
     console.log("###########################");
 }
 
