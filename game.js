@@ -128,7 +128,7 @@ class Player {
     }
 
     isBusted() {
-        return this.handTotal() >= 21;
+        return this.points > 21;
     }
 
     isBroke() {
@@ -178,6 +178,17 @@ class Player {
 
     currentBet() {
         return this.bet;
+    }
+
+    lowerBet(amount) {
+        this.bet -= amount;
+    }
+
+    // Checks to see if player can even make a certain bet
+    // e.g., player 1 bets 200 (amount) and they already betting 150 (this.bet)
+    // but only has 300 (this.cash). They can not make that bet
+    canBet(amount) {
+        return this.cash >= (this.bet + amount) ? true : false;
     }
 
     addCash(amount) {
