@@ -38,16 +38,6 @@ class Deck {
     pickCardFromTop() {
         return this.cards.shift();
     }
-
-    // Add card to bottom of deck
-    addToBottom(card) {
-        this.cards.push(card);
-    }
-
-    // Add card to top of deck
-    addToTop(card) {
-        this.cards.unshift(card);
-    }
 }
 
 const createDeck = () => {
