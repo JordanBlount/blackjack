@@ -41,10 +41,6 @@ class Deck {
         } 
     }
 
-    shuffle() {
-
-    }
-
     // Removes specific card from array
     removeCard(card) {
         this.cards.slice(this.cards.indexOf(card), 1);
@@ -207,10 +203,9 @@ class Player {
     }
 
     // Checks to see if player can even make a certain bet
-    // e.g., player 1 bets 200 (amount) and they already betting 150 (this.bet)
-    // but only has 300 (this.cash). They can not make that bet
+    // e.g., player 1 bets 200 (amount) but only has 300 (this.cash). They can not make that bet
     canBet(amount) {
-        return this.cash >= (this.bet + amount) ? true : false;
+        return this.cash >= amount ? true : false;
     }
 
     addCash(amount) {
@@ -235,7 +230,7 @@ class Dealer extends Player {
         super(name, hand, points, cash, bet, isDealer);
     }
 
-    dealTwoCards(cards, player) {
+    dealTwoCards(deck, player) {
         player.addCards([deck.pickCardFromTop(), deck.pickCardFromTop()]); 
     }
 
@@ -252,7 +247,8 @@ class Dealer extends Player {
 let player1 = null;
 let dealer = null;
 let currentTurn = 1;
-let deck = createDeck();
+let round = 1;
+let deck = null;
 
 let whosTurnIsIt = () => {
     // A way of seeing who is currently going
@@ -267,13 +263,14 @@ let changeTurns = () => {
     }
 }
 
-player1 = new Player("Jordan", [], 0, 100, 0, false);
-dealer = new Dealer("House", [], 0, 100, 0, true);
+
 
 let resetForNewRound = () => {
-    deck = createDeck();
+    player1.hand = [];
+    player.bet = 0;
+    dealer.hand = [];
     currentTurn = 1;
-
+    deck = createDeck();
     // Remove any winning notifications or things like that
 }
 
@@ -285,28 +282,76 @@ let totalReset = () => {
     // Open intro screen
 }
 
-let hit = () => {
-    let player = whosTurnIsIt();
+const hit = (player) => {
+    //let player = whosTurnIsIt();
+    if(!player.isBusted()) {
+        dealer.dealCard(deck, player);
+        console.log(`${player.name} received a card!`);
+        console.log(player.hand);
+        if(player.isBusted()) {
+            console.log(`${player.name} bust`);
+        } else {
+            changeTurns();
+            if(!player.isDealer) {
+                dealerMove();
+            }
+        }
+    }
 }
 
-let hold = () => {
-    let player = whosTurnIsIt();
+const stay = (player) => {
+    //let player = whosTurnIsIt();
+    console.log(`${player.name} choose to stay!`);
+    if(player.isDealer) {
+        checkForWinner();
+    }
 }
 
-let checkForWinner = () => {
-    if(!player.isBroke()) {
+const dealerMove = () => {
+    let random = Math.floor(Math.random() * 2);
+    if(random === 0) {
+        hit(dealer);
+    } else {
+        stay(dealer);
+    }
+}
+
+// TODO: Add a check for when someone busts here instead of it being in the "hit" function
+// FIXME: Make sure that this is accurately checking for when the player (or dealer) beats the other
+// without going over 21.
+const checkForWinner = () => {
+    if(!player1.isBroke()) {
         // This is the logic for checking if someone has won the current
         // round
-        if(player.isBusted() && !dealer.isBusted()) {
+        if(player1.points > dealer.points && !player1.isBusted()) {
+            // Player wins
+            // Send "You win message"
+            // Update module or buttons (to be able to prompt for next round)
+            console.log("You won this round!");
+            // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
+            if(player1.cashAmt === 2500 || round === 8) {
+                // Game should end
+                // Player wins!
+                // Show winning screen
+                // Prompt for new game
+            }
+        } else if(dealer.points > player1.points && !dealer.isBusted()) {
             // Dealer wins
             // Send "You lose message"
             // Update module or buttons (to be able to prompt for next round)
-        } else if(dealer.isBusted() && !player.isBusted()) {
-            // Player wins
-            // Send "You lose message"
-            // Update module or buttons (to be able to prompt for next round)
-        } else {
-            // This should never ever happen.
+            console.log("You lose this round!");
+            // player1.removeCash(player1.currentBet());
+            // if(player1.isBroke()) {
+            //     // Game over
+            // } else {
+            //     // Continue to next round
+            //     // Add onto round counter
+            //     round++;
+            //     resetForNewRound();
+            // }
+        } else if(player1.points === dealer.points) {
+            // It's a tie
+            // Player loses no money
         }
     } else {
         // All of the player's money is gone. Game totally over
@@ -327,3 +372,27 @@ let showInstructions = (show) => {
     
     }
 }
+
+// TODO: Change all my functions to const
+
+
+let testGame = () => {
+    player1 = new Player("Jordan", [], 0, 500, 0, false);
+    dealer = new Dealer("House", [], 0, 0, 0, true);
+    deck = createDeck();
+    deck.shuffle();
+
+    dealer.dealTwoCards(deck, player1);
+    dealer.dealTwoCards(deck, dealer);
+
+    console.log(`Player 1's current cash: ${player1.cashAmt}`);
+    console.log(player1.hand);
+    console.log(`Points: ${player1.points}`);
+    console.log(`Dealer's current cash: ${dealer.cashAmt}`);
+    console.log(dealer.hand);
+    console.log(`Points: ${dealer.points}`);
+
+    hit(player1);
+}
+
+testGame();
