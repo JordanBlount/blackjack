@@ -33,6 +33,10 @@ class Deck {
         this.cards.slice(this.cards.indexOf(card), 1);
     }
 
+    giveCard(card) {
+        return this.cards.splice(this.cards.indexOf(card), 1)[0];
+    }
+
     // This removes the card from the top of the deck
     // It return the card that was removed
     pickCardFromTop() {
@@ -207,7 +211,7 @@ class Dealer extends Player {
     }
 
     dealCard(deck, card, player) {
-        player.addCards(deck.cards[deck.cards.indexOf(card)]);
+        player.addCards(deck.giveCard(card));
     }
 
 }
@@ -234,7 +238,7 @@ dealer = new Dealer("House", [], 0, 100, 0, true);
 
 let giveAcesTest = () => {
     deck.cards.map(card => {
-        if(card.isAce()) {``
+        if(card.isAce()) {
             dealer.dealCard(deck, card, player1);
         }
     });
