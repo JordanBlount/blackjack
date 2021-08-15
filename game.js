@@ -68,13 +68,11 @@ class Deck {
 
 const createDeck = () => {
     let cards = [];
-
     cards = suit.flatMap(suit => {
         return values.map(value => {
             return new Card(suit, value, []);
         })
     });
-
     cards.map(card => {
         if(card.value === "J" || card.value === "Q" || card.value === "K") {
             card.points.push(10);
@@ -89,9 +87,6 @@ const createDeck = () => {
 
 class Player {
 
-    // We want to give the player a name, the current cards in their hand,
-    // and what is their turn which I may give them based on their current
-    // position in the players' array (if I add multiple players)
     constructor(name, hand, points, cash, bet, isDealer) {
         this.name = name;
         this.hand = hand;
@@ -194,12 +189,12 @@ class Player {
         this.bet = bet;
     }
 
-    currentBet() {
-        return this.bet;
-    }
-
     lowerBet(amount) {
         this.bet -= amount;
+    }
+
+    raiseBet(amount) {
+        this.bet += amount;
     }
 
     // Checks to see if player can even make a certain bet
@@ -216,16 +211,21 @@ class Player {
         this.cash -= amount;
     }
 
-    get cashAmt() {
+    currentCash() {
         return this.cash;
     }
 
-    get currentPoints() {
+    currentPoints() {
         return this.points;
+    }
+
+    currentBet() {
+        return this.bet;
     }
 }
 
 class Dealer extends Player {
+
     constructor(name, hand, points, cash, bet, isDealer) {
         super(name, hand, points, cash, bet, isDealer);
     }
@@ -250,12 +250,12 @@ let currentTurn = 1;
 let round = 1;
 let deck = null;
 
-let whosTurnIsIt = () => {
+const whosTurnIsIt = () => {
     // A way of seeing who is currently going
     return  currentTurn == 1 ? player1 : dealer;
 }
 
-let changeTurns = () => {
+const changeTurns = () => {
     if(currentTurn === 1) {
          currentTurn = 2; 
     } else {
@@ -263,48 +263,12 @@ let changeTurns = () => {
     }
 }
 
-
-
-let resetForNewRound = () => {
-    player1.hand = [];
-    player.bet = 0;
-    dealer.hand = [];
-    currentTurn = 1;
-    deck = createDeck();
-    // Remove any winning notifications or things like that
-}
-
-let totalReset = () => {
-    player = null;
-    dealer = null;
-    deck = null;
-    currentTurn = 1;
-    // Open intro screen
-}
-
 const hit = (player) => {
-    //let player = whosTurnIsIt();
-    if(!player.isBusted()) {
-        dealer.dealCard(deck, player);
-        console.log(`${player.name} received a card!`);
-        console.log(player.hand);
-        if(player.isBusted()) {
-            console.log(`${player.name} bust`);
-        } else {
-            changeTurns();
-            if(!player.isDealer) {
-                dealerMove();
-            }
-        }
-    }
+
 }
 
 const stay = (player) => {
-    //let player = whosTurnIsIt();
-    console.log(`${player.name} choose to stay!`);
-    if(player.isDealer) {
-        checkForWinner();
-    }
+
 }
 
 const dealerMove = () => {
@@ -328,8 +292,10 @@ const checkForWinner = () => {
             // Send "You win message"
             // Update module or buttons (to be able to prompt for next round)
             console.log("You won this round!");
+            player1.addCash(player1.currentBet());
+            console.log("Current cash: " + player1.currentCash())
             // Logic for if player reachs a certain amount of cash or if plays 8 rounds successfully
-            if(player1.cashAmt === 2500 || round === 8) {
+            if(player1.currentCash() === 2500 || round === 8) {
                 // Game should end
                 // Player wins!
                 // Show winning screen
@@ -340,7 +306,8 @@ const checkForWinner = () => {
             // Send "You lose message"
             // Update module or buttons (to be able to prompt for next round)
             console.log("You lose this round!");
-            // player1.removeCash(player1.currentBet());
+            player1.removeCash(player1.currentBet());
+            console.log("Current cash: " + player1.currentCash())
             // if(player1.isBroke()) {
             //     // Game over
             // } else {
@@ -360,6 +327,65 @@ const checkForWinner = () => {
     }
 }
 
+const winner = () => {
+    if(!player1.isBroke()) {
+        if(!player1.isBusted()) {
+
+        }
+    } else {
+
+    }
+}
+
+// TODO: Change all my functions to const
+
+// Test version of the game that runs in console For debugging purposes only.
+let testGame = () => {
+    player1 = new Player("Jordan", [], 0, 500, 0, false);
+    dealer = new Dealer("House", [], 0, 0, 0, true);
+    deck = createDeck();
+    deck.shuffle();
+
+    dealer.dealTwoCards(deck, player1);
+    dealer.dealTwoCards(deck, dealer);
+
+    player1.setBet(250);
+
+    console.log("###########################");
+    console.log(`Player 1's current cash: ${player1.currentCash()} Bet: ${player1.currentBet()}`);
+    console.log(player1.hand);
+    console.log(`Points: ${player1.points}`);
+    console.log(`Dealer's current cash: ${dealer.currentCash()}`);
+    console.log(dealer.hand);
+    console.log(`Points: ${dealer.points}`);
+
+
+    hit(player1);
+    console.log("###########################");
+}
+
+testGame();
+
+
+const resetForNewRound = () => {
+    player1.hand = [];
+    player.bet = 0;
+    dealer.hand = [];
+    currentTurn = 1;
+    deck = createDeck();
+    // Remove any winning notifications or things like that
+}
+
+const totalReset = () => {
+    player = null;
+    dealer = null;
+    deck = null;
+    currentTurn = 1;
+    // Open intro screen
+}
+
+// TODO: VISUALS FOR GAMES
+
 // Screen that shows the rules of the game
 let showInstructions = (show) => {
     // This is used to open or close the instructions screen.
@@ -372,27 +398,3 @@ let showInstructions = (show) => {
     
     }
 }
-
-// TODO: Change all my functions to const
-
-
-let testGame = () => {
-    player1 = new Player("Jordan", [], 0, 500, 0, false);
-    dealer = new Dealer("House", [], 0, 0, 0, true);
-    deck = createDeck();
-    deck.shuffle();
-
-    dealer.dealTwoCards(deck, player1);
-    dealer.dealTwoCards(deck, dealer);
-
-    console.log(`Player 1's current cash: ${player1.cashAmt}`);
-    console.log(player1.hand);
-    console.log(`Points: ${player1.points}`);
-    console.log(`Dealer's current cash: ${dealer.cashAmt}`);
-    console.log(dealer.hand);
-    console.log(`Points: ${dealer.points}`);
-
-    hit(player1);
-}
-
-testGame();
