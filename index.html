@@ -40,6 +40,7 @@
                 </div>
                 <div class="player-bet surfaces">
                     <!-- TODO: Add a money container here to fix resizing issue -->
+                    <!-- FIXME: When the game is being played on mobile, the money rows should only be 2 stacks deep -->
                     <div class="money-row">
                         <div class="chip-stack stack_10_1">
                             <div class="chip chip_20 chip_1"></div>
@@ -84,7 +85,7 @@
                     </div>
                 </div>
                 <div class="player-money surfaces">
-                    <h1 id="player-currentMoney">$1750</h1>
+                    <h1 class="label" id="player-currentMoney">$1750</h1>
                     <div class="money-container">
                         <div class="money-row">
                             <div class="chip-stack stack_10_1">
@@ -107,13 +108,40 @@
                                 <div class="chip chip_50 chip_7"></div>
                                 <div class="chip chip_50 chip_8"></div>
                             </div>
-                            <div class="chip-stack stack_10_3">
+                            <!-- <div class="chip-stack stack_10_3">
                                 <div class="chip chip_20 chip_1"></div>
                                 <div class="chip chip_20 chip_2"></div>
                                 <div class="chip chip_20 chip_3"></div>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="money-row">
+                            <div class="chip-stack stack_10_4">
+                                <div class="chip chip_10 chip_1"></div>
+                                <div class="chip chip_10 chip_2"></div>
+                                <div class="chip chip_10 chip_3"></div>
+                                <div class="chip chip_10 chip_4"></div>
+                                <div class="chip chip_10 chip_5"></div>
+                                <div class="chip chip_10 chip_6"></div>
+                                <div class="chip chip_10 chip_7"></div>
+                                <div class="chip chip_10 chip_8"></div>
+                            </div>
+                            <div class="chip-stack stack_10_5">
+                                <div class="chip chip_10 chip_1"></div>
+                                <div class="chip chip_10 chip_2"></div>
+                                <div class="chip chip_10 chip_3"></div>
+                                <div class="chip chip_10 chip_4"></div>
+                                <div class="chip chip_10 chip_5"></div>
+                                <div class="chip chip_10 chip_6"></div>
+                                <div class="chip chip_10 chip_7"></div>
+                                <div class="chip chip_10 chip_8"></div>
+                            </div>
+                            <!-- <div class="chip-stack stack_10_6">
+                                <div class="chip chip_10 chip_1"></div>
+                                <div class="chip chip_10 chip_2"></div>
+                                <div class="chip chip_10 chip_3"></div>
+                            </div> -->
+                        </div>
+                        <!-- <div class="money-row">
                             <div class="chip-stack stack_10_4">
                                 <div class="chip chip_10 chip_1"></div>
                                 <div class="chip chip_10 chip_2"></div>
@@ -139,34 +167,7 @@
                                 <div class="chip chip_10 chip_2"></div>
                                 <div class="chip chip_10 chip_3"></div>
                             </div>
-                        </div>
-                        <div class="money-row">
-                            <div class="chip-stack stack_10_4">
-                                <div class="chip chip_10 chip_1"></div>
-                                <div class="chip chip_10 chip_2"></div>
-                                <div class="chip chip_10 chip_3"></div>
-                                <div class="chip chip_10 chip_4"></div>
-                                <div class="chip chip_10 chip_5"></div>
-                                <div class="chip chip_10 chip_6"></div>
-                                <div class="chip chip_10 chip_7"></div>
-                                <div class="chip chip_10 chip_8"></div>
-                            </div>
-                            <div class="chip-stack stack_10_5">
-                                <div class="chip chip_10 chip_1"></div>
-                                <div class="chip chip_10 chip_2"></div>
-                                <div class="chip chip_10 chip_3"></div>
-                                <div class="chip chip_10 chip_4"></div>
-                                <div class="chip chip_10 chip_5"></div>
-                                <div class="chip chip_10 chip_6"></div>
-                                <div class="chip chip_10 chip_7"></div>
-                                <div class="chip chip_10 chip_8"></div>
-                            </div>
-                            <div class="chip-stack stack_10_6">
-                                <div class="chip chip_10 chip_1"></div>
-                                <div class="chip chip_10 chip_2"></div>
-                                <div class="chip chip_10 chip_3"></div>
-                            </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
                 <div class="btns surfaces">
