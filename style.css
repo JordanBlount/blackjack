@@ -108,7 +108,7 @@ header {
 .container {
     display: grid; 
     grid-template-columns: 1fr 1fr 1fr; 
-    grid-template-rows: 1fr 1fr 1fr 0.75fr 1.25fr 0.5fr; 
+    grid-template-rows: 1fr 0.5fr 1fr 1fr 1.25fr 0.5fr; 
     gap: 0px 0px; 
     grid-template-areas: 
       "dealer-cards dealer-cards deck"
@@ -130,10 +130,16 @@ header {
 
 .deck {
     grid-area: deck;
+    display: flex;
+    justify-content: center;
 }
 
 .player-bet {
     grid-area: player-bet;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .middle-of-board {
@@ -228,26 +234,44 @@ header {
     transform: rotate(180deg);
 }
 
+.card-deck {
+    position: relative;
+    width: 81px;
+    height: 95px;
+}
+
+.red-deck {
+    background-image: url('./assests/imgs/deck_red.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.blue-deck {
+    background-image: url('./assests/imgs/deck_blue.svg');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
 .diamonds {
-    background-image: url(./assests/imgs/suits/diamond.svg);
+    background-image: url('./assests/imgs/suits/diamond.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .clubs {
-    background-image: url(./assests/imgs/suits/club.svg);
+    background-image: url('./assests/imgs/suits/club.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .hearts {
-    background-image: url(./assests/imgs/suits/heart.svg);
+    background-image: url('./assests/imgs/suits/heart.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .spades {
-    background-image: url(./assests/imgs/suits/spade.svg);
+    background-image: url('./assests/imgs/suits/spade.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
@@ -260,7 +284,31 @@ header {
 .label {
     font-weight: 700;
     font-size: 1.5rem;
+}
+
+#player-currentMoney {
     margin-bottom: 1.1125em;
+}
+
+#betting-amount {
+    margin-bottom: 1.1125em;
+}
+
+.input-btn {
+    padding: 0.25em 1em;
+    background-color: rgba(0, 0, 0, 0.75);
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.250);
+    color: white;
+    border: none;
+    border-radius: 10px;
+}
+
+.input-btn:hover {
+    background-color: rgba(0, 0, 0, 0.50);
+}
+
+.input-btn:active {
+    background-color: rgba(0, 0, 0, 0.85);    
 }
 
 .money-container {
@@ -269,7 +317,6 @@ header {
     align-items: center;
     flex-direction: column;
 }
-
 
 .money-row {
     display: flex;
@@ -361,22 +408,26 @@ The game needs to be mobile first
 
 /* Should start to transition into tablet like game */
 @media(min-width: 600px) {
-
+    .label {
+        font-size: 2rem;
+    }  
 }
 
 @media(min-width: 768px) {
     .label {
         font-size: 2rem;
-        margin-bottom: 1.1125em;
     }  
 }
 
 /* 
     Should become desktop like game
-    TODO: Change grid here
-    TODO: Remove mobile layout
 */
 @media(min-width: 850px) {
+
+    header {
+        margin-bottom: 1.5em;
+    }
+
     .table {
         display: flex;
         justify-content: center;
@@ -437,6 +488,9 @@ The game needs to be mobile first
     
     .player-bet {
         grid-area: player-bet;
+        /* display: flex;
+        align-items: center;
+        justify-content: flex-start; */
     }
     
     .middle-of-board {
@@ -472,8 +526,8 @@ The game needs to be mobile first
 
     .label {
         font-size: 2rem;
-        margin-bottom: 1.1125em;
     }
+
 }
 
 @media(min-width: 1140px) {
