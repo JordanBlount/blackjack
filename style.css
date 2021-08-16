@@ -56,37 +56,22 @@ header {
     background-color:rgb(0, 105, 0);
 }
 
+/* 
+
+    Setup the look of the poker table
+
+*/
 .table {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    order: 1;
-    /* Original height was 500px, but changed */
-    width: 800px;
-    height: 600px;
-    /* Makes it where the table can not get smaller than this */
-    min-width: 800px;
-    min-height: 600px;
-    /* 
-        TODO: A gradiant with a hard stop in the middle at a 
-        45 degree angle to it really look like a table at the corners
-    */
-    background-color: rgb(104, 72, 12);
-    border-radius: 5px;
-    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.466);
+    width: 100%;
 }
 
 .border {
-    width: 95%;
-    height: 93%;
     background-color: rgb(0, 105, 0);
-    border-radius: 5px;
 }
 
 .surface {
     width: 100%;
     height: 100%;
-    border-radius: 5px;
     box-shadow: inset 0px 0px 2px black;
     /* Adds over image to the background */
     background-image: url('./assests/imgs/logo.svg');
@@ -103,17 +88,21 @@ header {
 
 .container {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 0.5fr;
     gap: 0px 0px;
-    grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
-                         "player-bet middle-of-board middle-of-board player-money" 
-                         "player-bet player-cards player-cards button-area";
-    padding: 0.75em 0.75em;
+    grid-auto-flow: row;
+    grid-template-areas:
+      "dealer-cards dealer-cards dealer-cards"
+      ". middle-of-board deck"
+      "player-bet middle-of-board player-money"
+      "player-bet middle-of-board player-money"
+      "player-cards player-cards player-cards"
+      "btns btns btns";
 }
 
 .game-rules {
-    grid-area: game-rules;
+    display: none;
 }
 
 .dealer-cards {
@@ -354,4 +343,101 @@ The game needs to be mobile first
 
 */
 
-@media(max-width: 600px) {}
+/* Should start to transition into tablet like game */
+@media(min-width: 600px) {
+
+}
+
+@media(min-width: 800px) {
+    
+}
+
+/* 
+    Should become desktop like game
+    TODO: Change grid here
+    TODO: Remove mobile layout
+*/
+@media(min-width: 850px) {
+    .table {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        order: 1;
+        /* Original height was 500px, but changed */
+        width: 800px;
+        height: 600px;
+        /* Makes it where the table can not get smaller than this */
+        min-width: 800px;
+        min-height: 600px;
+        /* 
+            TODO: A gradiant with a hard stop in the middle at a 
+            45 degree angle to it really look like a table at the corners
+        */
+        background-color: rgb(104, 72, 12);
+        border-radius: 5px;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.466);
+    }
+
+    .border {
+        width: 95%;
+        height: 93%;
+        background-color: rgb(0, 105, 0);
+        border-radius: 5px;
+    }
+
+    .surface {
+        border-radius: 5px;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr;
+        gap: 0px 0px;
+        grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
+                             "player-bet middle-of-board middle-of-board player-money" 
+                             "player-bet player-cards player-cards button-area";
+        padding: 0.75em 0.75em;
+    }
+    
+    .game-rules {
+        grid-area: game-rules;
+    }
+    
+    .dealer-cards {
+        grid-area: dealer-cards;
+    }
+    
+    .deck {
+        grid-area: deck;
+    }
+    
+    .player-bet {
+        grid-area: player-bet;
+    }
+    
+    .middle-of-board {
+        grid-area: middle-of-board;
+    }
+    
+    .player-cards {
+        grid-area: player-cards;
+    }
+    
+    .player-money {
+        grid-area: player-money;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    
+        /* Should keep all of the content closer to the player's side
+           if something is added to it (e,g, more chips even though this 
+           should not happen)
+        */
+        justify-content: end;
+    }
+}
+
+@media(min-width: 1140px) {
+
+}
