@@ -71,6 +71,12 @@ body {
     border: 1px solid rgba(41, 41, 41, 0.329);
 }
 
+.player-area {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .btns {
     /* 
         FIXME: Moves the buttons container in the bottom order
@@ -104,6 +110,84 @@ body {
 
 .game-btn:active {
     background-color: rgb(23, 170, 23);
+}
+
+.middle {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
+.money {
+    display: flex;
+    justify-content: space-between;
+}
+
+.chip-stack {
+    position: relative;
+    padding-right: 3.5em;
+    /* outline: 2px solid red; */
+}
+
+.chip {
+    position: absolute;
+    width: 55px;
+    height: 55px;
+}
+
+.chip_10 {
+    background-image: url('./assests/imgs/10.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.chip_20 {
+    background-image: url('./assests/imgs/20.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.chip_50 {
+    background-image: url('./assests/imgs/50.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.chip_100 {
+    background-image: url('./assests/imgs/100.png');
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.chip_1 {
+    top: -3px;
+}
+.chip_2 {
+    top: -6px;
+}
+.chip_3 {
+    top: -9px;
+}
+
+.chip_4 {
+    top: -12px;
+}
+
+.chip_5 {
+    top: -15px;
+}
+
+.chip_6 {
+    top: -18px;
+}
+
+.chip_7 {
+    top: -21px;
+}
+
+.chip_8 {
+    top: -24px;
 }
 
 /* 
