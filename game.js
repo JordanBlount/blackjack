@@ -475,3 +475,10 @@ let showInstructions = (show) => {
     
     }
 }
+
+let chipsToReceive = (amount) => {
+    let hundreds = 0;
+    let fifties = 0;
+    let twenties = 0;
+    let tens = 0;
+}
