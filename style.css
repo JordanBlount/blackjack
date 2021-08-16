@@ -20,11 +20,12 @@ body {
     justify-content: center;
     align-items: center;
     order: 1;
+    /* Original height was 500px, but changed */
     width: 800px;
-    height: 500px;
+    height: 600px;
     /* Makes it where the table can not get smaller than this */
     min-width: 800px;
-    min-height: 500px;
+    min-height: 600px;
     /* 
         TODO: A gradiant with a hard stop in the middle at a 
         45 degree angle to it really look like a table at the corners
@@ -96,6 +97,9 @@ body {
 
 .player-money {
     grid-area: player-money;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .button-area {
@@ -200,6 +204,11 @@ body {
 
 .card-container {
     display: flex;
+}
+
+#player-currentMoney {
+    font-weight: 700;
+    margin-bottom: 1.25em;
 }
 
 .money-container {
