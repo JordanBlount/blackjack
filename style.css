@@ -80,6 +80,19 @@ body {
     border: 1px solid rgba(41, 41, 41, 0.329);
 }
 
+.dealer-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.middle {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+}
+
 .player-area {
     display: flex;
     align-items: center;
@@ -122,18 +135,85 @@ body {
     background-color: rgb(23, 170, 23);
 }
 
-.middle {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
-}
-
 .money-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-direction: column;
+}
+
+/* 
+
+TODO: Create SVGs for each card type
+
+*/
+.card {
+    position: relative;
+    width: 70px;
+    height: 96px;
+    background-color: white;
+    box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.250);
+    border-radius: 5px;
+
+    /*  Puts space on right of each card
+        TODO: Change this to be added somewhere else
+    */
+    margin-right: 0.5em;
+}
+
+.card.red {
+    color: #C83000;
+}
+
+.card.black {
+    color: #000000;
+}
+
+.card::before, 
+.card::after {
+    position: absolute;
+    content: attr(data-value);
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.card::before {
+    top: 0.1125em;
+    left: 0.3em;
+}
+
+.card::after {
+    bottom: 0.1125em;
+    right: 0.3em;
+    transform: rotate(180deg);
+}
+
+.diamonds {
+    background-image: url(./assests/imgs/suits/diamond.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.clubs {
+    background-image: url(./assests/imgs/suits/club.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.hearts {
+    background-image: url(./assests/imgs/suits/heart.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.spades {
+    background-image: url(./assests/imgs/suits/spade.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.card-container {
+    display: flex;
 }
 
 .money-row {
