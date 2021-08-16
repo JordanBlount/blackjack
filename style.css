@@ -2,6 +2,8 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+
+    font-family: 'Playfair Display', serif;
 }
 
 body {
@@ -19,8 +21,8 @@ body {
     justify-content: center;
     align-items: center;
     order: 1;
-    width: 900px;
-    height: 600px;
+    width: 800px;
+    height: 500px;
     
     /* 
         TODO: A gradiant with a hard stop in the middle at a 
@@ -29,7 +31,7 @@ body {
 
     background-color: rgb(104, 72, 12);
     border-radius: 5px;
-    box-shadow: 0px 0px 10px rgb(70, 69, 69);
+    box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.466);
 }
 
 .border {
@@ -43,7 +45,12 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 5px;
-    box-shadow: inset 0px 0px 4px black;
+    box-shadow: inset 0px 0px 2px black;
+
+    /* Adds over image to the background */
+    background-image: url('./assests/imgs/logo.svg');
+    background-repeat: no-repeat;
+    background-position: center;
 
     /* 
         TODO: Styling to give the table some texture
@@ -77,14 +84,26 @@ body {
     /* 
         TODO: Make the buttons uniform in size
     */
-    border: 5px solid rgb(104, 72, 12);
+    border: 4px solid #002D00;
     background-color: rgb(0, 105, 0);
     box-shadow: inset 0px 0px 2px black;
     border-radius: 3px;
     padding: 0.75em 1.5em;
-    color: rgb(255, 231, 169);
+    color: rgb(255, 255, 255);
+    
     font-size: 1.125rem;
     font-weight: bold;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.game-btn:hover,
+.game-btn:active {
+    color: rgb(255, 231, 169);
+    background-color: rgb(0, 155, 0);
+}
+
+.game-btn:active {
+    background-color: rgb(23, 170, 23);
 }
 
 /* 
