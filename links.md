@@ -22,3 +22,8 @@ https://www.ildado.com/blackjack_rules.html
 Stacking images
 
 https://stackoverflow.com/questions/18235709/css-placing-one-image-on-top-of-another
+
+
+Grid-layout: Desktop
+
+grid.layoutit.com?id=KFpTRmW

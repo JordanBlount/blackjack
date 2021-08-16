@@ -492,3 +492,23 @@ let chipsToReceive = (amount) => {
     let twenties = 0;
     let tens = 0;
 }
+
+
+/* <div class="result-screen" id="result-screen">
+<div class="result-message" id="result-message"></div>
+<button class="reset" id="reset">Restart</button>
+</div> */
+
+// const openDimmedScreen = (player, draw) => {
+//     if(draw) {
+//         resultMessage.innerHTML = "Issa draw!"
+//     } else {
+//         resultMessage.innerHTML = `${player.getName()} won!`
+//     }
+//     resultScreen.classList.add('show');
+// }
+
+// const closeResultScreen = () => {
+//     resultMessage.innerHTML = "If you seeing this, you playing";
+//     resultScreen.classList.remove('show');
+// }
