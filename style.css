@@ -2,7 +2,6 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-
     font-family: 'Playfair Display', serif;
 }
 
@@ -23,16 +22,13 @@ body {
     order: 1;
     width: 800px;
     height: 500px;
-
     /* Makes it where the table can not get smaller than this */
     min-width: 800px;
     min-height: 500px;
-    
     /* 
         TODO: A gradiant with a hard stop in the middle at a 
         45 degree angle to it really look like a table at the corners
     */
-
     background-color: rgb(104, 72, 12);
     border-radius: 5px;
     box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.466);
@@ -50,32 +46,64 @@ body {
     height: 100%;
     border-radius: 5px;
     box-shadow: inset 0px 0px 2px black;
-
     /* Adds over image to the background */
     background-image: url('./assests/imgs/logo.svg');
     background-repeat: no-repeat;
     background-position: center;
-
     /* 
         TODO: Styling to give the table some texture
     */
-    
-    display: flex;
-    flex-direction: column;
-
+    /* display: flex; */
+    /* flex-direction: column; */
     /* 
         Makes it so you can not select and highlight text
     */
     user-select: none;
 }
 
+.container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap: 0px 0px;
+    grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
+                         "player-bet middle-of-board middle-of-board player-money" 
+                         "player-bet player-cards player-cards player-money";
+}
+
+.player-bet {
+    grid-area: player-bet;
+}
+
+.player-money {
+    grid-area: player-money;
+}
+
+.player-cards {
+    grid-area: player-cards;
+}
+
+.middle-of-board {
+    grid-area: middle-of-board;
+}
+
+.deck {
+    grid-area: deck;
+}
+
+.dealer-cards {
+    grid-area: dealer-cards;
+}
+
+.game-rules {
+    grid-area: game-rules;
+}
+
 .surfaces {
     width: 100%;
     height: 100%;
-
     /* Gives each of the surfaces some padding */
     padding: 0.75em 0.75em;
-
     /* Testing to see if the borders are split */
     border: 1px solid rgba(41, 41, 41, 0.329);
 }
@@ -84,6 +112,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    outline: 2px solid coral;
 }
 
 .middle {
@@ -97,7 +126,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* outline: 2px solid coral; */
+    outline: 2px solid coral;
 }
 
 .btns {
@@ -119,14 +148,12 @@ body {
     border-radius: 3px;
     padding: 0.75em 1.5em;
     color: rgb(255, 255, 255);
-    
     font-size: 1.125rem;
     font-weight: bold;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
-.game-btn:hover,
-.game-btn:active {
+.game-btn:hover, .game-btn:active {
     color: rgb(255, 231, 169);
     background-color: rgb(0, 155, 0);
 }
@@ -149,7 +176,6 @@ body {
     background-color: white;
     box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.250);
     border-radius: 5px;
-
     /*  Puts space on right of each card
         TODO: Change this to be added somewhere else
     */
@@ -164,8 +190,7 @@ body {
     color: #000000;
 }
 
-.card::before, 
-.card::after {
+.card::before, .card::after {
     position: absolute;
     content: attr(data-value);
     font-weight: 700;
@@ -219,6 +244,7 @@ body {
 }
 
 /* Container for my stacks */
+
 .chip-stack {
     position: relative;
     padding-right: 3.5em;
@@ -226,6 +252,7 @@ body {
 }
 
 /* Use SVGs. They look much better and are crisper */
+
 .chip {
     position: absolute;
     width: 55px;
@@ -261,9 +288,11 @@ body {
 .chip_1 {
     top: 0px;
 }
+
 .chip_2 {
     top: -3px;
 }
+
 .chip_3 {
     top: -6px;
 }
@@ -294,6 +323,5 @@ This is going to be how I do everything for desktop.
 The game needs to be mobile first
 
 */
-@media(max-width: 600px) {
 
-}
+@media(max-width: 600px) {}
