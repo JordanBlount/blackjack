@@ -16,6 +16,16 @@ class Card {
     color() {
         return this.suit == "clubs" || this.suit == "spades" ? "black" : "red";
     }
+
+    // An HTML element created based on the card attributes
+    HTML() {
+        let cardDiv = document.createElement("div");
+        cardDiv.classList.add("card");
+        cardDiv.classList.add(color());
+        cardDiv.classList.add(this.suit);
+        cardDiv.dataset.value = `${this.value}`;
+        return cardDiv;
+    }
 }
 
 class Deck {
