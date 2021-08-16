@@ -53,8 +53,6 @@ body {
     /* 
         TODO: Styling to give the table some texture
     */
-    /* display: flex; */
-    /* flex-direction: column; */
     /* 
         Makes it so you can not select and highlight text
     */
@@ -68,65 +66,40 @@ body {
     gap: 0px 0px;
     grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
                          "player-bet middle-of-board middle-of-board player-money" 
-                         "player-bet player-cards player-cards player-money";
-}
-
-.player-bet {
-    grid-area: player-bet;
-}
-
-.player-money {
-    grid-area: player-money;
-}
-
-.player-cards {
-    grid-area: player-cards;
-}
-
-.middle-of-board {
-    grid-area: middle-of-board;
-}
-
-.deck {
-    grid-area: deck;
-}
-
-.dealer-cards {
-    grid-area: dealer-cards;
+                         "player-bet player-cards player-cards button-area";
+    padding: 0.75em 0.75em;
 }
 
 .game-rules {
     grid-area: game-rules;
 }
 
-.surfaces {
-    width: 100%;
-    height: 100%;
-    /* Gives each of the surfaces some padding */
-    padding: 0.75em 0.75em;
-    /* Testing to see if the borders are split */
-    border: 1px solid rgba(41, 41, 41, 0.329);
+.dealer-cards {
+    grid-area: dealer-cards;
 }
 
-.dealer-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    outline: 2px solid coral;
+.deck {
+    grid-area: deck;
 }
 
-.middle {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    flex-direction: column;
+.player-bet {
+    grid-area: player-bet;
 }
 
-.player-area {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    outline: 2px solid coral;
+.middle-of-board {
+    grid-area: middle-of-board;
+}
+
+.player-cards {
+    grid-area: player-cards;
+}
+
+.player-money {
+    grid-area: player-money;
+}
+
+.button-area {
+    grid-area: button-area;
 }
 
 .btns {
@@ -160,13 +133,6 @@ body {
 
 .game-btn:active {
     background-color: rgb(23, 170, 23);
-}
-
-.money-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-direction: column;
 }
 
 .card {
@@ -235,6 +201,14 @@ body {
 .card-container {
     display: flex;
 }
+
+.money-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-direction: column;
+}
+
 
 .money-row {
     display: flex;
