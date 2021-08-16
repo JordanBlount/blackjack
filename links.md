@@ -11,3 +11,8 @@ TODO USE
 https://animate.style/
 https://animejs.com/
 https://www.youtube.com/watch?v=g7WnZ9hxUak
+
+
+RULES
+
+https://www.ildado.com/blackjack_rules.html

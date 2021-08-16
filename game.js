@@ -345,6 +345,12 @@ const checkForRoundWinner = () => {
         } else if(player1.isBusted() && !dealer.isBusted()) {
             player1.removeCash(player1.currentBet());
             checkIfOver();
+        } else if(player1.points === 21) {
+            player1.addCash(player.currentBet())
+            checkIfOver();
+        } else if(dealer.points === 21) {
+            player1.removeCash(player.currentBet());
+            checkIfOver();
         } else {
             // Neither player has busted
             if(player1.points > dealer.points && !player1.isBusted()) {
