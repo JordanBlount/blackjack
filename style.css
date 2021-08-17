@@ -56,6 +56,27 @@ header {
     background-color:rgb(0, 105, 0);
 }
 
+.game-btn {
+    width: 125px;
+    height: 50px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color:rgb(0, 105, 0);
+    border: 3px solid rgba(46, 46, 46, 0.50);
+    border-radius: 5px;
+    margin-right: 0.5em;
+}
+
+.game-btn:hover {
+    background-color:rgb(0, 120, 0);
+}
+
+.game-btn:active {
+    color: rgb(211, 211, 211);
+    background-color:rgb(0, 71, 0);
+}
+
 /* 
 
     Setup the look of the poker table
@@ -169,30 +190,10 @@ header {
 
 .btns {
     grid-area: btns;
-}
-
-.game-btn {
-    /* 
-        TODO: Make the buttons uniform in size
-    */
-    border: 4px solid #002D00;
-    background-color: rgb(0, 105, 0);
-    box-shadow: inset 0px 0px 2px black;
-    border-radius: 3px;
-    padding: 0.75em 1.5em;
-    color: rgb(255, 255, 255);
-    font-size: 1.125rem;
-    font-weight: bold;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-}
-
-.game-btn:hover, .game-btn:active {
-    color: rgb(255, 231, 169);
-    background-color: rgb(0, 155, 0);
-}
-
-.game-btn:active {
-    background-color: rgb(23, 170, 23);
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
 }
 
 .card {
@@ -341,25 +342,25 @@ header {
     height: 55px;
 }
 
-.chip_10 {
+.chip_ten {
     background-image: url('./assests/imgs/10.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
-.chip_20 {
+.chip_twenty {
     background-image: url('./assests/imgs/20.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
-.chip_50 {
+.chip_fifty {
     background-image: url('./assests/imgs/50.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
-.chip_100 {
+.chip_hundred {
     background-image: url('./assests/imgs/100.svg');
     background-repeat: no-repeat;
     background-position: center;
@@ -397,6 +398,14 @@ header {
 
 .chip_8 {
     top: -21px;
+}
+
+.chip_9 {
+    top: -24px;
+}
+
+.chip_10 {
+    top: -27px;
 }
 
 /* 
@@ -470,7 +479,7 @@ The game needs to be mobile first
         gap: 0px 0px;
         grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
                              "player-bet middle-of-board middle-of-board player-money" 
-                             "player-bet player-cards player-cards button-area";
+                             "player-bet player-cards player-cards btns";
         padding: 0.75em 0.75em;
     }
     
@@ -515,17 +524,17 @@ The game needs to be mobile first
     }
 
     .btns {
-        /* 
-            FIXME: Moves the buttons container in the bottom order
-            this is only for debugging purposes.
-        */
-        order: 2;
-        margin-top: 1.5rem;
-        display: none;
+        grid-area: btns;
+        flex-direction: column;
     }
 
     .label {
         font-size: 2rem;
+    }
+
+    .game-btn {
+        margin-right: 0px;
+        margin-bottom: 0.5em;
     }
 
 }
