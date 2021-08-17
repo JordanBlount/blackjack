@@ -324,6 +324,11 @@ header {
     /* outline: 1px solid coral; */
 }
 
+.set_1 {
+    top: 0rem;
+    left: 0rem;
+}
+
 .set_2 {
     top: 1.40rem;
     left: 1.5rem;
@@ -354,7 +359,7 @@ header {
 
 .input-btn {
     padding: 0.25em 1em;
-    background-color: rgba(0, 0, 0, 0.75);
+    background-color: rgba(0, 0, 0, 0.55);
     box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.250);
     color: white;
     border: none;

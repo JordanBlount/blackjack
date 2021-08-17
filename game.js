@@ -21,13 +21,45 @@ class Card {
     HTML(flipped, color) {
         let cardDiv = document.createElement("div");
         cardDiv.classList.add("card");
-        cardDiv.classList.add(color());
+        cardDiv.classList.add(this.color());
         cardDiv.classList.add(this.suit);
         if(flipped) {
-            cardDiv.classList(color === 1 ? "flipped-red" : "flipped-blue");
+            cardDiv.classList.add(color === 1 ? "flipped-red" : "flipped-blue");
         }
         cardDiv.dataset.value = `${this.value}`;
         return cardDiv;
+    }
+
+    render(player) {
+        let container = null;
+        if(!player.isDealer) {
+            container = document.querySelector('#player-cards');
+        } else {
+            container = document.querySelector('#dealer-cards');  
+        }
+        console.log("Checking container");
+        let allSets = container.querySelectorAll('.card-set');
+        if(allSets.length !== 0) {
+            let setId = allSets.length - 1;
+            console.log("SetID: " + setId);
+            let currentSet = allSets[setId];
+            if(currentSet.childElementCount == (player.isDealer ? 3 : 4)) {
+                let cardSet = document.createElement("div");
+                cardSet.classList.add("card-set");
+                cardSet.classList.add(`set_${setId + 1}`);
+                cardSet.appendChild(this.HTML(player.isDealer, 1));
+                container.appendChild(cardSet);
+            } else {
+                currentSet.appendChild(this.HTML(player.isDealer, 1));
+            }
+        } else {
+            console.log("No cards. Add 1");
+            let cardSet = document.createElement("div");
+            cardSet.classList.add("card-set");
+            cardSet.classList.add(`set_1`);
+            cardSet.appendChild(this.HTML(false, 1));
+            container.appendChild(cardSet);
+        }
     }
 }
 
@@ -197,12 +229,14 @@ class Player {
                 // console.log("Added multiple cards");
                 this.addPoints(card)
                 this.hand.push(card);
+                card.render(this);
             });   
         } else {
             // Adds a single card
             // console.log("Added single card");
             this.addPoints(cards);
             this.hand.push(cards);
+            cards.render(this);
         }
     }
     
@@ -242,6 +276,45 @@ class Player {
 
     currentBet() {
         return this.bet;
+    }
+
+    renderHand(cardContainer) {
+        let sortedCards = this.sort();
+        sortedCards.map((set, index) => {
+            let cardSet = document.createElement("div");
+            cardSet.classList.add("card-set");
+            cardSet.classList.add(`set_${index + 1}`);
+            set.map((card, index) => {
+                if(this.isDealer && index == 0) {
+                    cardSet.appendChild(card.HTML(true, 1));
+                } else {
+                    cardSet.appendChild(card.HTML(false, 1));
+                }
+            });
+            cardContainer.appendChild(cardSet);
+        });
+    }
+
+    // Creates a multidimensional array with creates sorted in 3s or 4s
+    sort() {
+        let sortedCards = [];
+        let row = [];
+        let arrC = 0;
+        let maxPerArr = 0;
+        for(let i = 0; i < this.hand.length; i++) {
+            if(maxPerArr === (this.isDealer ? 3 : 4)) {
+                maxPerArr = 0;
+                sortedCards.push(row);
+                row = [];
+                arrC++;
+            }
+            if(i === this.hand.length - 1) {
+                sortedCards.push(row);
+            }
+            row.push(this.hand[i]);
+            maxPerArr++;
+        }
+        return sortedCards;
     }
 }
 
@@ -296,7 +369,12 @@ const hit = (player) => {
     if(!player.isBusted()) {
         dealer.dealCard(deck, player);
         console.log(player.hand);
-        console.log(`Points: ${player.points}`);
+
+        if(!player.isDealer) {
+            updatePoints(player.points);
+        } else {
+
+        }
         // Checks to see if you have busted ater receiving a card
         if(player.isBusted()) {
             // TODO: Add a function to reveal the dealer's cards
@@ -333,13 +411,14 @@ const setupGame = (firstGame) => {
     gameStarted = true;
 
     console.log("Game was setup");
-    console.log(player1);
-    console.log(dealer);
-    console.log(deck);
+    //console.log(player1);
+    //console.log(dealer);
+    //console.log(deck);
 
-    setGameButtons(true);
-    //dealer.dealTwoCards(deck, player1);
-    //dealer.dealTwoCards(deck, dealer);
+    setGameButtons(firstGame);
+    dealer.dealTwoCards(deck, player1);
+    updatePoints(player1.points);
+    dealer.dealTwoCards(deck, dealer);
 }
 
 const dealerMove = () => {
@@ -416,7 +495,16 @@ const resetForNewRound = () => {
     dealer.points = 0;
     currentTurn = 1;
 
+    p1Cards.innerHTML = "";
+    dCards.innerHTML = "";
+
     deck = createDeck();
+    deck.shuffle();
+
+    setGameButtons(false);
+    dealer.dealTwoCards(deck, player1);
+    updatePoints(player1.points);
+    dealer.dealTwoCards(deck, dealer);
     // Remove any winning notifications or things like that
 }
 
@@ -425,13 +513,19 @@ const totalReset = () => {
     dealer = null;
     deck = null;
     currentTurn = 1;
+    round = 1;
     gameStarted = false;
+
+    p1Cards.innerHTML = "";
+    dCards.innerHTML = "";
     // Open intro screen
     openStartScreen();
 }
 
 const nextRound = () => {
     round++;
+    updateCash(player1.currentCash());
+    updateBet(0);
     resetForNewRound();
 }
 
@@ -451,12 +545,12 @@ const gameOver = () => {
         // You lost the game!
         // Play again?
         totalReset();
-        setupGame();
+        setupGame(false);
     } else {
         // Show winning screen!
         // Player again?
         totalReset();
-        setupGame();
+        setupGame(false);
     }
 }
 
@@ -518,7 +612,7 @@ const startGame = () => {
 
     // Stops someone from messing up the game if they somehow reopen the initial screen
     if(gameStarted === false) {
-        setupGame();
+        setupGame(true);
     }
 
     // Enable betting buttons instead of "Hit" and "Hold"
@@ -536,6 +630,7 @@ const openRulesScreen = () => {
     // rules.innerHTML = gameRules;
     // rulesScreen.classList.add('show');
     openStartScreen();
+    //testing();
 }
 
 const closeRulesScreen = () => {
@@ -544,32 +639,40 @@ const closeRulesScreen = () => {
 }
 
 const openBettingScreen = () => {
-    alert("Test");
-    console.log("test");
     changeGameButtons(false);
 }
 
 rulesBtn.addEventListener('click', openRulesScreen);
 closeRulesBtn.addEventListener('click', closeRulesScreen);
 
-let betInput = document.querySelector("#betting-amount");
 let btnsContainer = document.querySelector("#btns");
 let betBtn = null;
 let hitBtn = null;
 let holdBtn = null;
 
-const setGameButtons = (betting) => {
-    if(betting) {
-        betBtn = document.createElement('button');
-        betBtn.classList.add('game-btn');
-        betBtn.classList.add('bet-btn');
-        betBtn.innerHTML = "Bet";
-        betBtn.addEventListener('click', openBettingScreen);
-        btnsContainer.appendChild(betBtn);
+let betInput = document.querySelector("#betting-amount");
+let cashAmt = document.querySelector("#player-currentMoney");
+let p1Points = document.querySelector("#player-points");
 
-        // Adds event listener to the input field as well
-        betInput.addEventListener('click', openBettingScreen);
+let p1Cards = document.querySelector("#player-cards");
+let dCards = document.querySelector("#dealer-cards");
+
+const setGameButtons = (firstGame) => {
+    if(!firstGame) {
+        btnsContainer.removeChild(hitBtn);
+        btnsContainer.removeChild(stayBtn);
+        hitBtn.addEventListener('click', hitAction);
+        stayBtn.addEventListener('click', stayAction);
     }
+    betBtn = document.createElement('button');
+    betBtn.classList.add('game-btn');
+    betBtn.classList.add('bet-btn');
+    betBtn.innerHTML = "Bet";
+    betBtn.addEventListener('click', openBettingScreen);
+    btnsContainer.appendChild(betBtn);
+
+    // Adds event listener to the input field as well
+    betInput.addEventListener('click', openBettingScreen);
 }
 
 const changeGameButtons = (betting) => {
@@ -591,8 +694,8 @@ const changeGameButtons = (betting) => {
         stayBtn.classList.add('game-btn');
         stayBtn.innerHTML = "Hold";
         
-        hitBtn.addEventListener('click', hit);
-        stayBtn.addEventListener('click', stay);
+        hitBtn.addEventListener('click', hitAction);
+        stayBtn.addEventListener('click', stayAction);
 
         btnsContainer.appendChild(hitBtn);
         btnsContainer.appendChild(stayBtn);
@@ -601,6 +704,42 @@ const changeGameButtons = (betting) => {
     }
 }
 
-const setGameBoard = () => {
+const hitAction = () => {
+    hit(player1);
+}
 
+const stayAction = () => {
+    stay(player1);
+}
+
+const updateBet = (amount) => {
+    betInput.innerHTML = `$${amount}`;
+}
+
+const updateCash = (amount) => {
+    betInput.innerHTML = `$${amount}`;
+    cashAmt.innerHTML = `$${amount}`;
+}
+
+const updatePoints = (amount) => {
+    p1Points.innerHTML = `${amount}`;
+}
+
+const setGameBoard = () => {
+    let deckContainer = document.querySelector("");
+}
+
+
+const testing = () => {
+    let container = null;
+    let lol = 1;
+    if(lol === 1) {
+        container = document.querySelector('#dealer-cards');
+    } else {
+        container = document.querySelector('#dealer-cards');    
+    } 
+    let allSets = container.querySelectorAll('.card-set');
+    let setId = allSets.length - 1;
+    let currentSet = allSets[setId];
+    console.log(allSets.length);
 }
