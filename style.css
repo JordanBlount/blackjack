@@ -129,7 +129,7 @@ header {
 .container {
     display: grid; 
     grid-template-columns: 1fr 1fr 1fr; 
-    grid-template-rows: 1fr 0.5fr 1fr 1fr 1.25fr 0.5fr; 
+    grid-template-rows: 1fr 0.5fr 1fr 1fr 1.45fr 0.5fr; 
     gap: 0px 0px; 
     grid-template-areas: 
       "dealer-cards dealer-cards deck"
@@ -169,6 +169,9 @@ header {
 
 .player-cards {
     grid-area: player-cards;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .player-money {
@@ -196,6 +199,11 @@ header {
     align-items: center;
 }
 
+.points {
+    font-size: 1.5rem;
+    justify-self: center;
+}
+
 .card {
     position: relative;
     width: 70px;
@@ -203,6 +211,8 @@ header {
     background-color: white;
     box-shadow: 0px 3px 2px rgba(0, 0, 0, 0.250);
     border-radius: 5px;
+    background-repeat: no-repeat;
+    background-position: center;
     /*  Puts space on right of each card
         TODO: Change this to be added somewhere else
     */
@@ -255,31 +265,75 @@ header {
 
 .diamonds {
     background-image: url('./assests/imgs/suits/diamond.svg');
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 .clubs {
     background-image: url('./assests/imgs/suits/club.svg');
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 .hearts {
     background-image: url('./assests/imgs/suits/heart.svg');
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
 .spades {
     background-image: url('./assests/imgs/suits/spade.svg');
-    background-repeat: no-repeat;
-    background-position: center;
 }
 
+.flipped-red {
+    background-color: rgba(0, 0, 0, 0.021);
+    box-shadow: none;
+    background-image: url('./assests/imgs/card_red_back.svg');
+}
+
+.flipped-red::before,
+.flipped-red::after {
+    content: '';
+}
+
+.flipped-blue {
+    background-color: rgba(0, 0, 0, 0.021);
+    box-shadow: none;
+    background-image: url('./assests/imgs/card_blue_back.svg');
+}
+
+.flipped-blue::before,
+.flipped-blue::after {
+    content: '';
+}
+
+
 .card-container {
+    position: relative;
     display: flex;
     justify-content: center;
+    width: 100%;
+    height: 100%;
+    /* outline: 1px solid yellow; */
+}
+
+.card-set {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    display: flex;
+    justify-content: center;
+
+    /* outline: 1px solid coral; */
+}
+
+.set_2 {
+    top: 1.40rem;
+    left: 1.5rem;
+}
+
+.set_3 {
+    top: 2.80rem;
+    left: 0rem;   
+}
+
+.set_4 {
+    top: 4.20rem;
+    left: 1.5rem;   
 }
 
 .label {
