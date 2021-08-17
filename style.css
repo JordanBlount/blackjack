@@ -462,6 +462,38 @@ header {
     top: -27px;
 }
 
+.rules-screen {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.rules-screen.show {
+    display: flex;
+}
+
+.rules {
+    color: white;
+    font-size: 2rem;
+    margin-bottom: 0.5em;
+}
+
+.close-rules-btn {
+    padding: 0.5em 0.75em;
+    font-size: 2rem;
+}
+
+.close-rules-btn:active {
+    color: white;
+    background-color: black;
+}
 /* 
 
 This is going to be how I do everything for desktop.
@@ -590,7 +622,6 @@ The game needs to be mobile first
         margin-right: 0px;
         margin-bottom: 0.5em;
     }
-
 }
 
 @media(min-width: 1140px) {

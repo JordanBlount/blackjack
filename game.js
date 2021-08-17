@@ -499,16 +499,28 @@ let chipsToReceive = (amount) => {
 <button class="reset" id="reset">Restart</button>
 </div> */
 
-// const openDimmedScreen = (player, draw) => {
-//     if(draw) {
-//         resultMessage.innerHTML = "Issa draw!"
-//     } else {
-//         resultMessage.innerHTML = `${player.getName()} won!`
-//     }
-//     resultScreen.classList.add('show');
-// }
+let rules = document.getElementById("rules");
+let rulesScreen = document.getElementById("rules-screen");
+let closeRulesBtn = document.getElementById("close-rules-btn");
 
-// const closeResultScreen = () => {
-//     resultMessage.innerHTML = "If you seeing this, you playing";
-//     resultScreen.classList.remove('show');
-// }
+let rulesBtn = document.getElementById('rules-btn');
+
+rulesBtn.addEventListener('click', () => {
+    console.log("Test");
+    openRulesScreen()  
+});
+
+closeRulesBtn.addEventListener('click', () => {
+    console.log("Test");
+    closeRulesScreen();
+});
+
+const openRulesScreen = () => {
+    rules.innerHTML = "This screen should pop up showing the rules";
+    rulesScreen.classList.add('show');
+}
+
+const closeRulesScreen = () => {
+    rules.innerHTML = "You have found an Easter Egg!";
+    rulesScreen.classList.remove('show');
+}
