@@ -365,6 +365,10 @@ header {
     background-color: rgba(0, 0, 0, 0.50);
 }
 
+.no-hover:hover {
+    background-color: rgba(0, 0, 0, 0.75);    
+}
+
 .input-btn:active {
     background-color: rgba(0, 0, 0, 0.85);    
 }
@@ -686,6 +690,10 @@ The game needs to be mobile first
     .game-btn {
         margin-right: 0px;
         margin-bottom: 0.5em;
+    }
+
+    .bet-btn {
+        margin-bottom: 0px;    
     }
 }
 

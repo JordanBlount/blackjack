@@ -336,6 +336,8 @@ const setupGame = (firstGame) => {
     console.log(player1);
     console.log(dealer);
     console.log(deck);
+
+    setGameButtons(true);
     //dealer.dealTwoCards(deck, player1);
     //dealer.dealTwoCards(deck, dealer);
 }
@@ -541,5 +543,64 @@ const closeRulesScreen = () => {
     rulesScreen.classList.remove('show');
 }
 
+const openBettingScreen = () => {
+    alert("Test");
+    console.log("test");
+    changeGameButtons(false);
+}
+
 rulesBtn.addEventListener('click', openRulesScreen);
 closeRulesBtn.addEventListener('click', closeRulesScreen);
+
+let betInput = document.querySelector("#betting-amount");
+let btnsContainer = document.querySelector("#btns");
+let betBtn = null;
+let hitBtn = null;
+let holdBtn = null;
+
+const setGameButtons = (betting) => {
+    if(betting) {
+        betBtn = document.createElement('button');
+        betBtn.classList.add('game-btn');
+        betBtn.classList.add('bet-btn');
+        betBtn.innerHTML = "Bet";
+        betBtn.addEventListener('click', openBettingScreen);
+        btnsContainer.appendChild(betBtn);
+
+        // Adds event listener to the input field as well
+        betInput.addEventListener('click', openBettingScreen);
+    }
+}
+
+const changeGameButtons = (betting) => {
+    if(!betting) {
+        btnsContainer.removeChild(betBtn);
+        betBtn.removeEventListener('click', openBettingScreen);
+
+        // Removes hover effect from betting amount so that the player does not think
+        // they can bet anymore if they mouseover it
+        betInput.classList.add('no-hover');
+        betInput.removeEventListener('click', openBettingScreen);
+
+        hitBtn = document.createElement('button');
+        stayBtn = document.createElement('button');
+
+        hitBtn.classList.add('game-btn');
+        hitBtn.innerHTML = "Hit";
+
+        stayBtn.classList.add('game-btn');
+        stayBtn.innerHTML = "Hold";
+        
+        hitBtn.addEventListener('click', hit);
+        stayBtn.addEventListener('click', stay);
+
+        btnsContainer.appendChild(hitBtn);
+        btnsContainer.appendChild(stayBtn);
+    } else {
+        setGameButtons(true);
+    }
+}
+
+const setGameBoard = () => {
+
+}
