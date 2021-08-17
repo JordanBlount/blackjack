@@ -18,11 +18,14 @@ class Card {
     }
 
     // An HTML element created based on the card attributes
-    HTML() {
+    HTML(flipped, color) {
         let cardDiv = document.createElement("div");
         cardDiv.classList.add("card");
         cardDiv.classList.add(color());
         cardDiv.classList.add(this.suit);
+        if(flipped) {
+            cardDiv.classList(color === 1 ? "flipped-red" : "flipped-blue");
+        }
         cardDiv.dataset.value = `${this.value}`;
         return cardDiv;
     }
@@ -73,6 +76,14 @@ class Deck {
             }
             return total;
         }, 0);
+    }
+
+    // Creates the HTML element for a card deck
+    HTML(color) {
+        let deckDiv = document.createElement("div");
+        deckDiv.classList.add("card-deck");
+        deckDiv.classList.add(color === 1 ? "red-deck" : "blue-deck");
+        return deckDiv;   
     }
 }
 
@@ -263,6 +274,7 @@ let dealer = null;
 let currentTurn = 1;
 let round = 1;
 let deck = null;
+let gameStarted = false;
 
 const whosTurnIsIt = () => {
     // A way of seeing who is currently going
@@ -318,9 +330,14 @@ const setupGame = (firstGame) => {
     dealer = new Dealer("House", [], 0, 0, 0, true);
     deck = createDeck();
     deck.shuffle();
+    gameStarted = true;
 
-    dealer.dealTwoCards(deck, player1);
-    dealer.dealTwoCards(deck, dealer);
+    console.log("Game was setup");
+    console.log(player1);
+    console.log(dealer);
+    console.log(deck);
+    //dealer.dealTwoCards(deck, player1);
+    //dealer.dealTwoCards(deck, dealer);
 }
 
 const dealerMove = () => {
@@ -406,7 +423,9 @@ const totalReset = () => {
     dealer = null;
     deck = null;
     currentTurn = 1;
+    gameStarted = false;
     // Open intro screen
+    openStartScreen();
 }
 
 const nextRound = () => {
@@ -469,23 +488,6 @@ let testGame = () => {
 
 // TODO: VISUALS FOR GAMES
 
-// Screen that shows the rules of the game
-let showInstructions = (show) => {
-    // This is used to open or close the instructions screen.
-    if(show) {
-        let rules = `
-            This is Blackjack. You are the player. The House is the computer. The rules of the game
-            are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
-            will win the round. There are 8 rounds in total. If you successfully stay alive without losing
-            all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
-
-            Good luck!
-        `;
-    } else {
-    
-    }
-}
-
 let chipsToReceive = (amount) => {
     let hundreds = 0;
     let fifties = 0;
@@ -493,33 +495,45 @@ let chipsToReceive = (amount) => {
     let tens = 0;
 }
 
+let startScreen = document.querySelector('#start-screen');
+let startBtn = document.querySelector("#start-btn");
+
 let rules = document.getElementById("rules");
 let rulesScreen = document.getElementById("rules-screen");
 let closeRulesBtn = document.getElementById("close-rules-btn");
-
 let rulesBtn = document.getElementById('rules-btn');
 
-rulesBtn.addEventListener('click', () => {
-    console.log("Test");
-    openRulesScreen();
-});
+const openStartScreen = () => {
+    startScreen.classList.add('show');
+    startBtn.addEventListener('click', startGame, { once: true}); // Should be clicked only once
+}
 
-closeRulesBtn.addEventListener('click', () => {
-    console.log("Test");
-    closeRulesScreen();
-});
+const startGame = () => {
+    startScreen.classList.remove('show');
+
+    // Game is initiated here!
+    // Put in game setup stuff here
+
+    // Stops someone from messing up the game if they somehow reopen the initial screen
+    if(gameStarted === false) {
+        setupGame();
+    }
+
+    // Enable betting buttons instead of "Hit" and "Hold"
+}
 
 const openRulesScreen = () => {
-    let gameRules = `
-    This is Blackjack. You are the player. The House is the computer. The rules of the game
-    are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
-    will win the round. There are 8 rounds in total. If you successfully stay alive without losing
-    all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
+    // let gameRules = `
+    // This is Blackjack. You are the player. The House is the computer. The rules of the game
+    // are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
+    // will win the round. There are 8 rounds in total. If you successfully stay alive without losing
+    // all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
 
-    Good luck!
-    `;
-    rules.innerHTML = gameRules;
-    rulesScreen.classList.add('show');
+    // Good luck!
+    // `;
+    // rules.innerHTML = gameRules;
+    // rulesScreen.classList.add('show');
+    openStartScreen();
 }
 
 const closeRulesScreen = () => {
@@ -527,20 +541,5 @@ const closeRulesScreen = () => {
     rulesScreen.classList.remove('show');
 }
 
-let startScreen = document.querySelector('#start-screen');
-let startBtn = document.querySelector("#start-btn");
-
-startBtn.addEventListener('click', () => {
-    startGame();
-});
-
-const openStartScreen = () => {
-    startScreen.classList.add('show');
-}
-
-const startGame = () => {
-    startScreen.classList.remove('show');
-    rulesBtn.removeEventListener('click');
-
-    // Game is initiated here!
-}
+rulesBtn.addEventListener('click', openRulesScreen);
+closeRulesBtn.addEventListener('click', closeRulesScreen);
