@@ -493,12 +493,6 @@ let chipsToReceive = (amount) => {
     let tens = 0;
 }
 
-
-/* <div class="result-screen" id="result-screen">
-<div class="result-message" id="result-message"></div>
-<button class="reset" id="reset">Restart</button>
-</div> */
-
 let rules = document.getElementById("rules");
 let rulesScreen = document.getElementById("rules-screen");
 let closeRulesBtn = document.getElementById("close-rules-btn");
@@ -507,7 +501,7 @@ let rulesBtn = document.getElementById('rules-btn');
 
 rulesBtn.addEventListener('click', () => {
     console.log("Test");
-    openRulesScreen()  
+    openRulesScreen();
 });
 
 closeRulesBtn.addEventListener('click', () => {
@@ -516,11 +510,37 @@ closeRulesBtn.addEventListener('click', () => {
 });
 
 const openRulesScreen = () => {
-    rules.innerHTML = "This screen should pop up showing the rules";
+    let gameRules = `
+    This is Blackjack. You are the player. The House is the computer. The rules of the game
+    are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
+    will win the round. There are 8 rounds in total. If you successfully stay alive without losing
+    all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
+
+    Good luck!
+    `;
+    rules.innerHTML = gameRules;
     rulesScreen.classList.add('show');
 }
 
 const closeRulesScreen = () => {
     rules.innerHTML = "You have found an Easter Egg!";
     rulesScreen.classList.remove('show');
+}
+
+let startScreen = document.querySelector('#start-screen');
+let startBtn = document.querySelector("#start-btn");
+
+startBtn.addEventListener('click', () => {
+    startGame();
+});
+
+const openStartScreen = () => {
+    startScreen.classList.add('show');
+}
+
+const startGame = () => {
+    startScreen.classList.remove('show');
+    rulesBtn.removeEventListener('click');
+
+    // Game is initiated here!
 }
