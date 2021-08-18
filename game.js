@@ -138,8 +138,92 @@ const createDeck = () => {
     return new Deck(cards);
 }
 
+class Chip {
+    constructor(value) {
+        this.value = value;
+    }
+
+    valueToName() {
+        let str = '';
+        if(this.value === 10) {
+            str = "ten";
+        } else if(this.value === 20) {
+            str = "twenty";
+        } else if(this.value === 50) {
+            str = "fifty";
+        } else if(this.value === 100) {
+            str = "hundred";
+        }
+        return str;
+    }
+
+    render(loc) {
+        let chipDiv = document.createElement("div");
+        chipDiv.classList.add('clip');
+        chipDiv.classList.add(`chip_${this.valueToName()}`);
+        chipDiv.classList.add(`chip_${loc}`);
+        return chipDiv;
+    }
+}
+
+class ChipStack {
+    constructor(chips) {
+        this.chips = chips;
+    }
+
+    addChip(chip) {
+        this.chips.push(chip);
+    }
+
+    render(id, flipped) {
+        let chipStackDiv = document.createElement("div");
+        chipStackDiv.classList.add('chip-stack');
+        if(flipped) {
+            chipStackDiv.classList.add('chip-stack-flipped');
+        }
+        chipStackDiv.classList.add(`stack_${id}`);
+        return chipStackDiv;
+    }
+}
+
+// TODO: Add this variable below and the function to the player class
+
+let chips = [[],[],[],[]];
+
+let addChip = (value) => {
+    switch(value) {
+        case 10:
+            chips[0].push(new Chip(10)); 
+        break;
+        case 20:
+            chips[0].push(new Chip(20)); 
+        break;
+        case 50:
+            chips[0].push(new Chip(50)); 
+        break;
+        case 100:
+            chips[0].push(new Chip(100)); 
+        break;
+    }
+}
+
+let renderChips = (chips, location) => {
+    let moneyContainer = document.createElement('div');
+    moneyContainer.classList.add('money-container');
+    if(location === "betting_screen") {
+        moneyContainer.classList.add('money-container-flipped');
+        moneyContainer.id = "betting-money";
+    }
+
+    for(let i = 0; i < chips.length; i++) {
+        
+    }
+}
+
 class Player {
 
+    // TODO: Add chips to player hand instead of cash (make it chip stacks)
+    // TODO: Create a method for adding new chips (cash) and adding it into existing chip sets or other ones
     constructor(name, hand, points, cash, bet, isDealer) {
         this.name = name;
         this.hand = hand;
@@ -589,7 +673,7 @@ let chipsToReceive = (amount) => {
 
     let given = 0;
     while(given !== amount) {
-        
+
     }
 }
 
@@ -745,4 +829,36 @@ const testing = () => {
     let setId = allSets.length - 1;
     let currentSet = allSets[setId];
     console.log(allSets.length);
+}
+
+let gameOverlay = null;
+let bettingOverlay = null;
+
+let currentMoney = null;
+let currentBet = null; // Will change name because already used in Player class
+
+// TODO: Add -flipped to 'money-container' (betting-money), 'money-row', 'chip-stack'
+
+let bettingChipBtns = null; // Get all of them at once and add a general listener TODO: See Tic Tac Toe
+
+let lowerOrRaiseBtn = null;
+let placeBet = null;
+
+let changeLowerOrRaiseBtn = (lower) => {
+    if(lower) {
+        lowerOrRaiseBtn.classList.remove('raise');
+        lowerOrRaiseBtn.classList.add('lower');
+    } else {
+        lowerOrRaiseBtn.classList.remove('lower');
+        lowerOrRaiseBtn.classList.add('raise');
+    }
+}
+
+//placeBet.addEventListener('click', placeBetAction);
+
+const placeBetAction = () => {
+    gameOverlay.classList.remove('show');
+    bettingOverlay.classList.remove('show');
+
+    // Actions to place a bet and enable "Bet" button to start round
 }
