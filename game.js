@@ -207,19 +207,6 @@ let addChip = (value) => {
     }
 }
 
-let renderChips = (chips, location) => {
-    let moneyContainer = document.createElement('div');
-    moneyContainer.classList.add('money-container');
-    if(location === "betting_screen") {
-        moneyContainer.classList.add('money-container-flipped');
-        moneyContainer.id = "betting-money";
-    }
-
-    for(let i = 0; i < chips.length; i++) {
-        
-    }
-}
-
 class Player {
 
     // TODO: Add chips to player hand instead of cash (make it chip stacks)
@@ -399,6 +386,54 @@ class Player {
             maxPerArr++;
         }
         return sortedCards;
+    }
+
+    renderChips = (chips, maxPerStack, location) => {
+        let x = 0;
+        let stackArr = [];
+        let stacks = [];
+        for(let i = 0; i < chips.length; i++) {
+            if(x === maxPerStack) {
+                x = 0;
+                stacks.push(stackArr);
+                stackArr = [];
+            }
+            if(x === (chips.length - 1)) {
+                stacks.push(stackArr);
+            }
+            stackArr.push(chips[i]);
+            x++;
+        }
+    
+        let size = 3; // How many chip stacks go into each money row
+        let split = [];
+        for (let i = 0;  i < stacks.length; i += size) {
+            split.push(stacks.slice(i, i + size))
+        }
+    
+        let moneyContainer = document.createElement('div');
+        moneyContainer.classList.add('money-container');
+        if(location === "betting_screen") {
+            moneyContainer.classList.add('money-container-flipped');
+            moneyContainer.id = "betting-money";
+        }
+    
+        split.map((row, i) => {
+            let moneyRow = document.createElement('div');
+            moneyRow.classList.add("money-row");
+            if(location === "betting_screen") {
+                moneyRow1.classList.add("money-row-flipped");   
+            }
+            row.map((stack, j) => {
+                let chipStack = stack.render(j + 1, location === "betting_screen" ?true : false);
+                stack.map((chip, z) => {
+                    let chipDiv = chip.render((z + 1)); // Z would be the index + 1
+                    chipStack.appendChild(chipDiv);
+                });
+                moneyRow.appendChild(chipStack);
+            });
+            moneyContainer.appendChild(moneyRow);
+        })
     }
 }
 
@@ -862,3 +897,4 @@ const placeBetAction = () => {
 
     // Actions to place a bet and enable "Bet" button to start round
 }
+
