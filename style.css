@@ -46,14 +46,14 @@ header {
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
-    background-color:rgb(0, 147, 0);
+    background-color: rgb(0, 147, 0);
     border: 1px solid rgb(46, 46, 46);
     border-radius: 5px;
 }
 
 .nav-btn:active {
     color: rgb(211, 211, 211);
-    background-color:rgb(0, 105, 0);
+    background-color: rgb(0, 105, 0);
 }
 
 .game-btn {
@@ -62,7 +62,7 @@ header {
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
-    background-color:rgb(0, 105, 0);
+    background-color: rgb(0, 105, 0);
     border: 2px solid rgba(46, 46, 46, 0.50);
     border-radius: 5px;
     margin-right: 0.5em;
@@ -72,12 +72,12 @@ header {
 }
 
 .game-btn:hover {
-    background-color:rgb(0, 120, 0);
+    background-color: rgb(0, 120, 0);
 }
 
 .game-btn:active {
     color: rgb(211, 211, 211);
-    background-color:rgb(0, 71, 0);
+    background-color: rgb(0, 71, 0);
 }
 
 /* 
@@ -85,6 +85,7 @@ header {
     Setup the look of the poker table
 
 */
+
 .table {
     width: 100%;
     height: 100%;
@@ -97,11 +98,12 @@ header {
 }
 
 .surface {
+    position: relative;
     width: 100%;
     height: 100%;
     box-shadow: inset 0px 0px 2px black;
     /* Adds over image to the background */
-    background-image: url('./assests/imgs/logo.svg');
+    background-image: url('./assets/imgs/logo.svg');
     background-repeat: no-repeat;
     background-position: center;
     /* 
@@ -130,18 +132,12 @@ header {
 } */
 
 .container {
-    display: grid; 
-    grid-template-columns: 1fr 1fr 1fr; 
-    grid-template-rows: 1fr 0.5fr 1fr 1fr 1.45fr 0.5fr; 
-    gap: 0px 0px; 
-    grid-template-areas: 
-      "dealer-cards dealer-cards deck"
-      "dealer-cards dealer-cards ."
-      "player-bet . player-money"
-      "player-bet . player-money"
-      "player-cards player-cards player-cards"
-      "btns btns btns"; 
-      padding: 0.75em 0.75em 0em 0.75em;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 0.5fr 1fr 1fr 1.45fr 0.5fr;
+    gap: 0px 0px;
+    grid-template-areas: "dealer-cards dealer-cards deck" "dealer-cards dealer-cards ." "player-bet . player-money" "player-bet . player-money" "player-cards player-cards player-cards" "btns btns btns";
+    padding: 0.75em 0.75em 0em 0.75em;
 }
 
 .game-rules {
@@ -182,7 +178,6 @@ header {
     display: flex;
     flex-direction: column;
     align-items: center;
-
     /* Should keep all of the content closer to the player's side
        if something is added to it (e,g, more chips even though this 
        should not happen)
@@ -255,55 +250,52 @@ header {
 }
 
 .red-deck {
-    background-image: url('./assests/imgs/deck_red.svg');
+    background-image: url('./assets/imgs/deck_red.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .blue-deck {
-    background-image: url('./assests/imgs/deck_blue.svg');
+    background-image: url('./assets/imgs/deck_blue.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .diamonds {
-    background-image: url('./assests/imgs/suits/diamond.svg');
+    background-image: url('./assets/imgs/suits/diamond.svg');
 }
 
 .clubs {
-    background-image: url('./assests/imgs/suits/club.svg');
+    background-image: url('./assets/imgs/suits/club.svg');
 }
 
 .hearts {
-    background-image: url('./assests/imgs/suits/heart.svg');
+    background-image: url('./assets/imgs/suits/heart.svg');
 }
 
 .spades {
-    background-image: url('./assests/imgs/suits/spade.svg');
+    background-image: url('./assets/imgs/suits/spade.svg');
 }
 
 .flipped-red {
     background-color: rgba(0, 0, 0, 0.021);
     box-shadow: none;
-    background-image: url('./assests/imgs/card_red_back.svg');
+    background-image: url('./assets/imgs/card_red_back.svg');
 }
 
-.flipped-red::before,
-.flipped-red::after {
+.flipped-red::before, .flipped-red::after {
     content: '';
 }
 
 .flipped-blue {
     background-color: rgba(0, 0, 0, 0.021);
     box-shadow: none;
-    background-image: url('./assests/imgs/card_blue_back.svg');
+    background-image: url('./assets/imgs/card_blue_back.svg');
 }
 
-.flipped-blue::before,
-.flipped-blue::after {
+.flipped-blue::before, .flipped-blue::after {
     content: '';
 }
-
 
 .card-container {
     position: relative;
@@ -320,7 +312,6 @@ header {
     position: absolute;
     display: flex;
     justify-content: center;
-
     /* outline: 1px solid coral; */
 }
 
@@ -336,12 +327,12 @@ header {
 
 .set_3 {
     top: 2.80rem;
-    left: 0rem;   
+    left: 0rem;
 }
 
 .set_4 {
     top: 4.20rem;
-    left: 1.5rem;   
+    left: 1.5rem;
 }
 
 .label {
@@ -371,33 +362,48 @@ header {
 }
 
 .no-hover:hover {
-    background-color: rgba(0, 0, 0, 0.75);    
+    background-color: rgba(0, 0, 0, 0.75);
 }
 
 .input-btn:active {
-    background-color: rgba(0, 0, 0, 0.85);    
+    background-color: rgba(0, 0, 0, 0.85);
 }
 
 .money-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: column;
+    /* flex-direction: column; */
 }
 
 .money-row {
     display: flex;
     justify-content: space-between;
     /* outline: 2px solid red; */
-    padding-bottom: 3.5em;
+    flex-direction: column;
 }
 
 /* Container for my stacks */
 
 .chip-stack {
     position: relative;
-    padding-right: 3.5em;
+    /* padding-right: 3.5em; */
+    margin-right: 3.5rem;
     /* outline: 2px solid red; */
+    margin-bottom: 3rem;
+}
+
+.money-container-flipped {
+    flex-direction: column;
+}
+
+.money-row-flipped {
+    flex-direction: row;
+    padding-bottom: 3.5rem;
+}
+
+.chip-stack-flipped {
+    margin-bottom: 0rem;
 }
 
 /* Use SVGs. They look much better and are crisper */
@@ -409,27 +415,111 @@ header {
 }
 
 .chip_ten {
-    background-image: url('./assests/imgs/10.svg');
+    background-image: url('./assets/imgs/10.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .chip_twenty {
-    background-image: url('./assests/imgs/20.svg');
+    background-image: url('./assets/imgs/20.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .chip_fifty {
-    background-image: url('./assests/imgs/50.svg');
+    background-image: url('./assets/imgs/50.svg');
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .chip_hundred {
-    background-image: url('./assests/imgs/100.svg');
+    background-image: url('./assets/imgs/100.svg');
     background-repeat: no-repeat;
     background-position: center;
+}
+
+.chip_big {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.chip_ten_big {
+    background-image: url('./assets/imgs/10_big.svg');
+}
+
+.chip_twenty_big {
+    background-image: url('./assets/imgs/20_big.svg');
+}
+
+.chip_fifty_big {
+    background-image: url('./assets/imgs/50_big.svg');
+}
+
+.chip_hundred_big {
+    background-image: url('./assets/imgs/100_big.svg');
+}
+
+.chip_10_btn, .chip_20_btn, .chip_50_btn, .chip_100_btn {
+    position: relative;
+    width: 86px;
+    height: 86px;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: #777676;
+    border: 1px solid #646464;
+    box-shadow: inset 0px 2px 2px rgba(0, 0%, 0%, 0.25);
+    border-radius: 50px;
+}
+
+.chip_10_btn:hover, .chip_20_btn:hover, .chip_50_btn:hover, .chip_100_btn:hover {
+    background-color: #8a8a8a;
+}
+
+.chip_10_btn:active, .chip_20_btn:active, .chip_50_btn:active, .chip_100_btn:active {
+    background-color: #3f3f3f;
+}
+
+.chip_10_btn::before {
+    position: absolute;
+    content: '';
+    background-image: url('./assets/imgs/10_big.svg');
+    top: 0.55rem;
+    left: 0.40rem;
+    width: 72px;
+    height: 72px;
+}
+
+.chip_20_btn::before {
+    position: absolute;
+    content: '';
+    background-image: url('./assets/imgs/20_big.svg');
+    top: 0.55rem;
+    left: 0.40rem;
+    width: 72px;
+    height: 72px;
+}
+
+.chip_50_btn::before {
+    position: absolute;
+    content: '';
+    background-image: url('./assets/imgs/50_big.svg');
+    top: 0.55rem;
+    left: 0.40rem;
+    width: 72px;
+    height: 72px;
+}
+
+.chip_100_btn::before {
+    position: absolute;
+    content: '';
+    background-image: url('./assets/imgs/100_big.svg');
+    top: 0.55rem;
+    left: 0.40rem;
+    width: 72px;
+    height: 72px;
 }
 
 /* Positions to make stacks */
@@ -529,7 +619,7 @@ header {
     color: white;
     font-size: 1.5rem;
     font-weight: 700;
-    background-color:rgb(0, 105, 0);
+    background-color: rgb(0, 105, 0);
     border: 2px solid rgba(46, 46, 46, 0.50);
     border-radius: 5px;
     margin-right: 0.5em;
@@ -537,16 +627,16 @@ header {
 }
 
 .start-btn:hover {
-    background-color:rgb(0, 120, 0);
+    background-color: rgb(0, 120, 0);
 }
 
 .start-btn:active {
     color: rgb(211, 211, 211);
-    background-color:rgb(0, 71, 0);
+    background-color: rgb(0, 71, 0);
 }
 
 .logo {
-    /* background-image: url('./assests/imgs/logo.svg');
+    /* background-image: url('./assets/imgs/logo.svg');
     background-repeat: no-repeat;
     background-position: center; */
     font-size: 3.5rem;
@@ -564,6 +654,139 @@ header {
     margin-bottom: 2.5rem;
     margin-top: 2.5rem;
 }
+
+.game-overlay {
+    /* 
+        FIXME: SET THIS TO DISPLAY FLEX
+    */
+    /* display: none; */
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.betting-overlay {
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: center; */
+    align-items: center;
+}
+
+.betting-area-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.betting-chip-btns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    gap: 1em 1em;
+    grid-auto-flow: row;
+    grid-template-areas: "chip_10_btn chip_20_btn" "chip_50_btn chip_100_btn";
+}
+
+.chip_10_btn {
+    grid-area: chip_10_btn;
+}
+
+.chip_20_btn {
+    grid-area: chip_20_btn;
+}
+
+.chip_50_btn {
+    grid-area: chip_50_btn;
+}
+
+.chip_100_btn {
+    grid-area: chip_100_btn;
+}
+
+.betting-btns {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+}
+
+.betting-btn {
+    width: 125px;
+    height: 50px;
+    color: white;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color: rgba(105, 105, 105, 0.85);
+    border: 1px solid rgba(117, 117, 117, 0.75);
+    box-shadow: 0px 0px 2px rgba(226, 226, 226, 0.25);
+    border-radius: 5px;
+    margin-right: 0.5em;
+}
+
+.betting-btn:hover {
+    background-color: rgb(134, 134, 134);
+}
+
+.betting-btn:active {
+    background-color: rgb(58, 58, 58);
+}
+
+.current-money {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-top: 0.25em;
+}
+
+#betting-money {
+    
+}
+
+.betting-area {
+    background-color: #545454;
+    border: 1px solid #646464;
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.250);
+    border-radius: 5px;
+    width: 268px;
+    height: 246px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#current-bet-label {
+    font-size: 1.5rem;
+    margin-bottom: 0.25em;
+}
+
+.current-bet {
+    width: 4.75em;
+    padding: 0.25em 1em;
+    font-size: 1.5rem;
+    font-weight: 700;
+    background-color: rgba(0, 0, 0, 0.55);
+    box-shadow: inset 0px 1px 1px rgba(0, 0, 0, 0.250);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    margin-bottom: 1.5em;
+}
+
 /* 
 
 This is going to be how I do everything for desktop.
@@ -572,21 +795,46 @@ The game needs to be mobile first
 */
 
 /* Should start to transition into tablet like game */
+
 @media(min-width: 600px) {
     .label {
         font-size: 2rem;
-    }  
+    }
+
+    .money-container {
+        flex-direction: column;
+    }
+
+    .money-row {
+        flex-direction: row;
+        padding-bottom: 3.5rem;
+    }
+
+    .chip-stack {
+        margin-bottom: 0rem;
+    }
+
+    
 }
 
 @media(min-width: 768px) {
     .label {
         font-size: 2rem;
-    }  
+    }
+
+    .betting-overlay {
+        height: 70%;
+    }
+
+    .betting-area-container {
+        flex-direction: row;
+    }
 }
 
 /* 
     Should become desktop like game
 */
+
 @media(min-width: 850px) {
 
     header {
@@ -637,45 +885,42 @@ The game needs to be mobile first
         grid-template-columns: 1fr 1fr 1fr 1fr;
         grid-template-rows: 1fr 1fr 1fr;
         gap: 0px 0px;
-        grid-template-areas: "game-rules dealer-cards dealer-cards deck" 
-                             "player-bet middle-of-board middle-of-board player-money" 
-                             "player-bet player-cards player-cards btns";
+        grid-template-areas: "game-rules dealer-cards dealer-cards deck" "player-bet middle-of-board middle-of-board player-money" "player-bet player-cards player-cards btns";
         padding: 0.75em 0.75em;
     }
-    
+
     .game-rules {
         grid-area: game-rules;
     }
-    
+
     .dealer-cards {
         grid-area: dealer-cards;
     }
-    
+
     .deck {
         grid-area: deck;
     }
-    
+
     .player-bet {
         grid-area: player-bet;
         /* display: flex;
         align-items: center;
         justify-content: flex-start; */
     }
-    
+
     .middle-of-board {
         grid-area: middle-of-board;
     }
-    
+
     .player-cards {
         grid-area: player-cards;
     }
-    
+
     .player-money {
         grid-area: player-money;
         display: flex;
         flex-direction: column;
         align-items: center;
-    
         /* Should keep all of the content closer to the player's side
            if something is added to it (e,g, more chips even though this 
            should not happen)
@@ -698,10 +943,12 @@ The game needs to be mobile first
     }
 
     .bet-btn {
-        margin-bottom: 0px;    
+        margin-bottom: 0px;
+    }
+
+    .betting-overlay {
+        height: 80%;
     }
 }
 
-@media(min-width: 1140px) {
-
-}
+@media(min-width: 1140px) {}

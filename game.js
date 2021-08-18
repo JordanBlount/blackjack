@@ -411,9 +411,6 @@ const setupGame = (firstGame) => {
     gameStarted = true;
 
     console.log("Game was setup");
-    //console.log(player1);
-    //console.log(dealer);
-    //console.log(deck);
 
     setGameButtons(firstGame);
     dealer.dealTwoCards(deck, player1);
@@ -589,7 +586,13 @@ let chipsToReceive = (amount) => {
     let fifties = 0;
     let twenties = 0;
     let tens = 0;
+
+    let given = 0;
+    while(given !== amount) {
+        
+    }
 }
+
 
 let startScreen = document.querySelector('#start-screen');
 let startBtn = document.querySelector("#start-btn");
