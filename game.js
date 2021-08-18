@@ -37,11 +37,11 @@ class Card {
         } else {
             container = document.querySelector('#dealer-cards');  
         }
-        console.log("Checking container");
+        // console.log("Checking container");
         let allSets = container.querySelectorAll('.card-set');
         if(allSets.length !== 0) {
             let setId = allSets.length - 1;
-            console.log("SetID: " + setId);
+            // console.log("SetID: " + setId);
             let currentSet = allSets[setId];
             if(currentSet.childElementCount == (player.isDealer ? 3 : 4)) {
                 let cardSet = document.createElement("div");
@@ -53,7 +53,7 @@ class Card {
                 currentSet.appendChild(this.HTML(player.isDealer, 1));
             }
         } else {
-            console.log("No cards. Add 1");
+            // console.log("No cards. Add 1");
             let cardSet = document.createElement("div");
             cardSet.classList.add("card-set");
             cardSet.classList.add(`set_1`);
@@ -167,8 +167,9 @@ class Chip {
 }
 
 class ChipStack {
-    constructor(chips) {
+    constructor(chips, stackID) {
         this.chips = chips;
+        this.stackID = stackID;
     }
 
     addChip(chip) {
@@ -182,6 +183,7 @@ class ChipStack {
             chipStackDiv.classList.add('chip-stack-flipped');
         }
         chipStackDiv.classList.add(`stack_${id}`);
+        this.stackID = stackID;
         return chipStackDiv;
     }
 }
@@ -190,33 +192,19 @@ class ChipStack {
 
 let chips = [[],[],[],[]];
 
-let addChip = (value) => {
-    switch(value) {
-        case 10:
-            chips[0].push(new Chip(10)); 
-        break;
-        case 20:
-            chips[0].push(new Chip(20)); 
-        break;
-        case 50:
-            chips[0].push(new Chip(50)); 
-        break;
-        case 100:
-            chips[0].push(new Chip(100)); 
-        break;
-    }
-}
-
 class Player {
 
     // TODO: Add chips to player hand instead of cash (make it chip stacks)
     // TODO: Create a method for adding new chips (cash) and adding it into existing chip sets or other ones
-    constructor(name, hand, points, cash, bet, isDealer) {
+    constructor(name, hand, points, cash, chips, chipStacks, bet, betStacks, isDealer) {
         this.name = name;
         this.hand = hand;
         this.points = points;
         this.cash = cash;
+        this.chips = chips;
+        this.chipStacks = chipStacks;
         this.bet = bet;
+        this.betStacks = betStacks;
         this.isDealer = isDealer;
     }
 
@@ -324,7 +312,7 @@ class Player {
     }
 
     // Checks to see if player can even make a certain bet
-    // e.g., player 1 bets 200 (amount) but only has 300 (this.cash). They can not make that bet
+    // e.g., player 1 bets 500 (amount) but only has 300 (this.cash). They can not make that bet
     canBet(amount) {
         return this.cash >= amount ? true : false;
     }
@@ -337,6 +325,68 @@ class Player {
         this.cash -= amount;
     }
 
+    addChip = (value) => {
+        if(Array.isArray(value)) {
+        }
+        let chip = new Chip(value);
+        switch(value) {
+            case 10:
+                chips[0].push(chip); 
+            break;
+            case 20:
+                chips[1].push(chip); 
+            break;
+            case 50:
+                chips[2].push(chip); 
+            break;
+            case 100:
+                chips[3].push(chip); 
+            break;
+        }
+        this.renderChip(chip);
+    }
+
+    renderChip(chip) {
+        if(!this.areStacksFull()) {
+            let chipStack = this.getAvailableStack(chip);
+            if(chipStack === null || chipStack === undefined) {
+                // Something went wrong here
+            } else {
+                let playerMoney = document.querySelector('.player-money');
+                let chipStackDiv = playerMoney.querySelector(`stack_${chipStack.stackID}`);
+                let chipDiv = chip.render(chipStackDiv.childElementCount + 1); // Gets the current amount of children + 1
+                chipStackDiv.appendChild(chipDiv);
+                chipStack.push(chip); // Adds the chip to our stacks
+            }
+        }
+    }
+
+    // Stack counts are determined here: 12 chips per stack
+    getAvailableStack(chip) {
+        let stack = null;
+        if(this.chipStacks.length > 0) {
+            let goodStacks = this.chipStacks.filter(stack => stack.length < 12);
+
+            stack = goodStacks.find(stack, () => {
+                return stack.every(chipInStack => chip.value === chipInStack.value);
+            }, 0);
+    
+            if(stack === undefined) {
+                stack = goodStacks.find(stack => stack.length < 12);
+            }
+        } else {
+            // There are no current stacks
+            stack = [];
+            this.chipStacks.push(stack);
+        }
+        return stack;
+    }
+
+    // Amount of stacks that a player can have displayed on screen
+    areStacksFull() {
+        return chipStacks.length === 6 ? true : false;
+    }
+
     currentCash() {
         return this.cash;
     }
@@ -347,45 +397,6 @@ class Player {
 
     currentBet() {
         return this.bet;
-    }
-
-    renderHand(cardContainer) {
-        let sortedCards = this.sort();
-        sortedCards.map((set, index) => {
-            let cardSet = document.createElement("div");
-            cardSet.classList.add("card-set");
-            cardSet.classList.add(`set_${index + 1}`);
-            set.map((card, index) => {
-                if(this.isDealer && index == 0) {
-                    cardSet.appendChild(card.HTML(true, 1));
-                } else {
-                    cardSet.appendChild(card.HTML(false, 1));
-                }
-            });
-            cardContainer.appendChild(cardSet);
-        });
-    }
-
-    // Creates a multidimensional array with creates sorted in 3s or 4s
-    sort() {
-        let sortedCards = [];
-        let row = [];
-        let arrC = 0;
-        let maxPerArr = 0;
-        for(let i = 0; i < this.hand.length; i++) {
-            if(maxPerArr === (this.isDealer ? 3 : 4)) {
-                maxPerArr = 0;
-                sortedCards.push(row);
-                row = [];
-                arrC++;
-            }
-            if(i === this.hand.length - 1) {
-                sortedCards.push(row);
-            }
-            row.push(this.hand[i]);
-            maxPerArr++;
-        }
-        return sortedCards;
     }
 
     renderChips = (chips, maxPerStack, location) => {
@@ -439,8 +450,8 @@ class Player {
 
 class Dealer extends Player {
 
-    constructor(name, hand, points, cash, bet, isDealer) {
-        super(name, hand, points, cash, bet, isDealer);
+    constructor(name, hand, points, cash, chips, chipStacks, bet, betStacks, isDealer) {
+        super(name, hand, points, cash, chips, chipStacks, bet, betStacks, isDealer);
     }
 
     dealTwoCards(deck, player) {
@@ -523,13 +534,14 @@ const stay = (player) => {
 }
 
 const setupGame = (firstGame) => {
-    player1 = new Player("Player 1", [], 0, 500, 0, false);
-    dealer = new Dealer("House", [], 0, 0, 0, true);
+    player1 = new Player("Player 1", [], 0, 500, [], [], 0, [], false);
+    dealer = new Dealer("House", [], 0, 0, [], [], 0, [], true);
     deck = createDeck();
     deck.shuffle();
     gameStarted = true;
 
     console.log("Game was setup");
+    console.log("Current Round: " + round);
 
     setGameButtons(firstGame);
     dealer.dealTwoCards(deck, player1);
@@ -604,7 +616,7 @@ const checkForRoundWinner = () => {
 
 const resetForNewRound = () => {
     player1.hand = [];
-    player1.bet = 0;
+    // player1.bet = 0; 
     player1.points = 0;
 
     dealer.hand = [];
@@ -640,6 +652,7 @@ const totalReset = () => {
 
 const nextRound = () => {
     round++;
+    console.log("Current Round: " + round);
     updateCash(player1.currentCash());
     updateBet(0);
     resetForNewRound();
@@ -667,48 +680,6 @@ const gameOver = () => {
         // Player again?
         totalReset();
         setupGame(false);
-    }
-}
-
-// TODO: Change all my functions to const
-
-// Test version of the game that runs in console For debugging purposes only.
-let testGame = () => {
-    player1 = new Player("Player 1", [], 0, 500, 0, false);
-    dealer = new Dealer("House", [], 0, 0, 0, true);
-    deck = createDeck();
-    deck.shuffle();
-
-    dealer.dealTwoCards(deck, player1);
-    dealer.dealTwoCards(deck, dealer);
-
-    player1.setBet(250);
-
-    console.log("###########################");
-    console.log(`Player 1's current cash: ${player1.currentCash()} Bet: ${player1.currentBet()}`);
-    console.log(player1.hand);
-    console.log(`Points: ${player1.points}`);
-    console.log(`House's current cash: ${dealer.currentCash()}`);
-    console.log(dealer.hand);
-    console.log(`Points: ${dealer.points}`);
-
-    stay(player1);
-    console.log("###########################");
-}
-
-// testGame();
-
-// TODO: VISUALS FOR GAMES
-
-let chipsToReceive = (amount) => {
-    let hundreds = 0;
-    let fifties = 0;
-    let twenties = 0;
-    let tens = 0;
-
-    let given = 0;
-    while(given !== amount) {
-
     }
 }
 
@@ -760,10 +731,6 @@ const closeRulesScreen = () => {
     rulesScreen.classList.remove('show');
 }
 
-const openBettingScreen = () => {
-    changeGameButtons(false);
-}
-
 rulesBtn.addEventListener('click', openRulesScreen);
 closeRulesBtn.addEventListener('click', closeRulesScreen);
 
@@ -790,7 +757,7 @@ const setGameButtons = (firstGame) => {
     betBtn.classList.add('game-btn');
     betBtn.classList.add('bet-btn');
     betBtn.innerHTML = "Bet";
-    betBtn.addEventListener('click', openBettingScreen);
+    betBtn.addEventListener('click', finalizeBet);
     btnsContainer.appendChild(betBtn);
 
     // Adds event listener to the input field as well
@@ -851,36 +818,19 @@ const setGameBoard = () => {
     let deckContainer = document.querySelector("");
 }
 
+let gameOverlay = document.querySelector('#game-overlay');
+let bettingOverlay = document.querySelector('#betting-overlay');
+let currentMoney = document.querySelector('#current-money');
+let currentBet = document.querySelector('#current-bet');
 
-const testing = () => {
-    let container = null;
-    let lol = 1;
-    if(lol === 1) {
-        container = document.querySelector('#dealer-cards');
-    } else {
-        container = document.querySelector('#dealer-cards');    
-    } 
-    let allSets = container.querySelectorAll('.card-set');
-    let setId = allSets.length - 1;
-    let currentSet = allSets[setId];
-    console.log(allSets.length);
-}
 
-let gameOverlay = null;
-let bettingOverlay = null;
+let bettingChipBtns = Array.from(document.querySelector('#betting-chip-btns').children);
+let bettingBtns = document.querySelector('#betting-btns');
+let lowerOrRaiseBtn = bettingBtns.querySelector("#lowerOrRaise");
+let placeBet = bettingBtns.querySelector("#place-bet");
 
-let currentMoney = null;
-let currentBet = null; // Will change name because already used in Player class
-
-// TODO: Add -flipped to 'money-container' (betting-money), 'money-row', 'chip-stack'
-
-let bettingChipBtns = null; // Get all of them at once and add a general listener TODO: See Tic Tac Toe
-
-let lowerOrRaiseBtn = null;
-let placeBet = null;
-
-let changeLowerOrRaiseBtn = (lower) => {
-    if(lower) {
+let changeLowerOrRaiseBtn = () => {
+    if(lowerOrRaiseBtn.classList.contains("raise")) {
         lowerOrRaiseBtn.classList.remove('raise');
         lowerOrRaiseBtn.classList.add('lower');
     } else {
@@ -889,12 +839,73 @@ let changeLowerOrRaiseBtn = (lower) => {
     }
 }
 
-//placeBet.addEventListener('click', placeBetAction);
+const changeDirection = () => {
+    changeLowerOrRaiseBtn();
+}
 
 const placeBetAction = () => {
-    gameOverlay.classList.remove('show');
-    bettingOverlay.classList.remove('show');
-
+    closeBettingScreen();
     // Actions to place a bet and enable "Bet" button to start round
 }
 
+const chipBtn = (e) => {
+    let raise = lowerOrRaiseBtn.classList.contains('raise') ? true : false;
+    let chipValue = e.target.dataset.value;
+    if(raise) {
+        
+    } else {
+
+    }
+}
+
+const openBettingScreen = () => {
+    //changeGameButtons(false);
+    gameOverlay.classList.add("show");
+    bettingOverlay.classList.add("show");
+
+    currentMoney.innerHTML = `$${player1.currentCash()}`
+    currentBet.innerHTML = `$${player1.currentBet()}`
+
+    lowerOrRaiseBtn.addEventListener('click', changeDirection);
+    placeBet.addEventListener('click', placeBetAction);
+    
+    bettingChipBtns.map(btn => {
+        btn.addEventListener('click', chipBtn);
+    });
+}
+
+const closeBettingScreen = () => {
+    //changeGameButtons(false);
+    gameOverlay.classList.remove("show");
+    bettingOverlay.classList.remove("show");
+
+    lowerOrRaiseBtn.removeEventListener('click', changeDirection);
+    placeBet.removeEventListener('click', placeBetAction);
+    bettingChipBtns.map(btn => {
+        btn.removeEventListener('click', chipBtn);
+    });
+}
+
+const finalizeBet = () => {
+    let bet = player1.currentBet();
+
+    // Checks to see if your bet is not 0 && you can actually bet that 
+    // amount
+    if(bet === 0 && player1.canBet(bet)) {
+        console.log("LOL");
+    } else {
+        // Will not let you do anything
+        // TODO: Add some logic here that gives a visual cue
+        console.log("LOLOL");
+    }
+}
+
+const displayOnGameOverlay = (screen) => {
+    // Removes all previous screen that were being displayed
+    if(gameOverlay.children.length > 0) {
+        let oldScreen = gameOverlay.children[0];
+        oldScreen.classList.remove("show");
+        gameOverlay.removeChild(oldScreen);
+    }
+    gameOverlay.appendChild(screen);
+}

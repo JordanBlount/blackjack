@@ -27,3 +27,7 @@ https://stackoverflow.com/questions/18235709/css-placing-one-image-on-top-of-ano
 Grid-layout: Desktop
 
 grid.layoutit.com?id=KFpTRmW
+
+https://developer.mozilla.org/en-US/docs/Web/API/Element/children
+
+https://stackoverflow.com/questions/5898656/check-if-an-element-contains-a-class-in-javascript#:~:text=The%20Element.,an%20element%20contains%20a%20class.

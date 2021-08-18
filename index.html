@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>21 - Jordan Blount</title>
+    <title>Blackjack - Jordan Blount</title>
     <script defer src="game.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -184,8 +184,8 @@
                 </div>
                 <!-- This is an overlay where we are going to do different things -->
                 <div class="game-overlay" id="game-overlay">
-                    <div class="betting-overlay">
-                        <p class="current-money">$1750</p>
+                    <div class="betting-overlay" id="betting-overlay">
+                        <p class="current-money" id="current-money">$0</p>
                         <div class="betting-area-container">
                             <div class="betting-area">
                                 <h1 id="current-bet-label">Bet</h1>
@@ -263,15 +263,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="betting-chip-btns">
-                                <button class="chip_10_btn"></button>
-                                <button class="chip_20_btn"></button>
-                                <button class="chip_50_btn"></button>
-                                <button class="chip_100_btn"></button>
+                            <div class="betting-chip-btns" id="betting-chip-btns">
+                                <button class="chip_10_btn" data-value="10"></button>
+                                <button class="chip_20_btn" data-value="20"></button>
+                                <button class="chip_50_btn" data-value="50"></button>
+                                <button class="chip_100_btn" data-value="100"></button>
                             </div>
                         </div>
-                        <div class="betting-btns">
-                            <button class="betting-btn lower" id="lowerOrRaise"></button>
+                        <div class="betting-btns" id="betting-btns">
+                            <button class="betting-btn raise" id="lowerOrRaise"></button>
                             <button class="betting-btn" id="place-bet">Place</button>
                         </div>
                     </div>
