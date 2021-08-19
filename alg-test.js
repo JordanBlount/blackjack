@@ -26,3 +26,11 @@ let test = () => {
 }
 
 test();
+
+let randomBtn = document.querySelector("#btn");
+
+randomBtn.addEventListener('click', someFunction, { once: true});
+
+let someFunction = () => {
+
+}

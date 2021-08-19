@@ -159,7 +159,7 @@ class Chip {
 
     render(loc) {
         let chipDiv = document.createElement("div");
-        chipDiv.classList.add('clip');
+        chipDiv.classList.add('chip');
         chipDiv.classList.add(`chip_${this.valueToName()}`);
         chipDiv.classList.add(`chip_${loc}`);
         return chipDiv;
@@ -176,14 +176,13 @@ class ChipStack {
         this.chips.push(chip);
     }
 
-    render(id, flipped) {
+    render(flipped) {
         let chipStackDiv = document.createElement("div");
         chipStackDiv.classList.add('chip-stack');
         if(flipped) {
             chipStackDiv.classList.add('chip-stack-flipped');
         }
-        chipStackDiv.classList.add(`stack_${id}`);
-        this.stackID = stackID;
+        chipStackDiv.classList.add(`stack_${this.stackID}`);
         return chipStackDiv;
     }
 }
@@ -325,7 +324,7 @@ class Player {
         this.cash -= amount;
     }
 
-    addChip = (value) => {
+    addChip(value) {
         if(Array.isArray(value)) {
         }
         let chip = new Chip(value);
@@ -344,6 +343,25 @@ class Player {
             break;
         }
         this.renderChip(chip);
+    }
+
+    hasChip(val, bettedChips) {
+        let has = false;
+        let alreadyBetted = bettedChips.filter(chip => chip.value === val);
+        switch(val) {
+            case 10:
+                has = (chips[0].length > alreadyBetted);
+            break;
+            case 20:
+                has = (chips[1].length > alreadyBetted);
+            break;
+            case 50:
+                has = (chips[2].length > alreadyBetted);
+            break;
+            case 100:
+                has = (chips[3].length > alreadyBetted);
+            break;
+        }
     }
 
     renderChip(chip) {
@@ -433,7 +451,7 @@ class Player {
             let moneyRow = document.createElement('div');
             moneyRow.classList.add("money-row");
             if(location === "betting_screen") {
-                moneyRow1.classList.add("money-row-flipped");   
+                moneyRow.classList.add("money-row-flipped");   
             }
             row.map((stack, j) => {
                 let chipStack = stack.render(j + 1, location === "betting_screen" ?true : false);
@@ -822,6 +840,8 @@ let gameOverlay = document.querySelector('#game-overlay');
 let bettingOverlay = document.querySelector('#betting-overlay');
 let currentMoney = document.querySelector('#current-money');
 let currentBet = document.querySelector('#current-bet');
+let bettingMoney = document.querySelector('#betting-money');
+let stacksArray = Array.from(bettingMoney.children);
 
 
 let bettingChipBtns = Array.from(document.querySelector('#betting-chip-btns').children);
@@ -830,7 +850,8 @@ let lowerOrRaiseBtn = bettingBtns.querySelector("#lowerOrRaise");
 let placeBet = bettingBtns.querySelector("#place-bet");
 
 let changeLowerOrRaiseBtn = () => {
-    if(lowerOrRaiseBtn.classList.contains("raise")) {
+    let raise = lowerOrRaiseBtn.classList.contains("raise");
+    if(raise) {
         lowerOrRaiseBtn.classList.remove('raise');
         lowerOrRaiseBtn.classList.add('lower');
     } else {
@@ -848,18 +869,152 @@ const placeBetAction = () => {
     // Actions to place a bet and enable "Bet" button to start round
 }
 
-const chipBtn = (e) => {
-    let raise = lowerOrRaiseBtn.classList.contains('raise') ? true : false;
-    let chipValue = e.target.dataset.value;
-    if(raise) {
-        
-    } else {
+let bettedChips = [];
 
+// const addChipToBetted = (chip) => {
+//     if(bettedChips.length > 0) {
+//         let stack = bettedChips[bettedChips.length - 1];
+//         let loc = bettedChips.length;
+//         // Checks to see if the current stack has less than 12 chips
+//         //console.log(stack);
+//         if(stack.chips.length !== 10) {
+//             console.log("This 1");
+//             stack.chips.push(chip);
+//             console.log("Number of chips in stack: " + stack.chips.length);
+//             renderBettedChip(chip, stack);
+//         } else {
+//             // Creates a new stack with one chip
+//             console.log("This 2");
+//             console.log(loc);
+//             let chipStack = new ChipStack([], loc + 1);
+//             chipStack.chips.push(chip);
+//             console.log("Number of chips in old stack: " + stack.chips.length);
+//             console.log("Number of chips in new stack: " + chipStack.chips.length);
+//             bettedChips.push(chipStack);
+//             renderBettedChip(chip, chipStack);
+//         }
+//     } else {
+//         // Creates a new stack and puts a chip in it
+//         console.log("The new stack was made in addChipToBetted");
+//         let chipStack = new ChipStack([], 1);
+//         chipStack.chips.push(chip);
+//         bettedChips.push(chipStack);
+//         renderBettedChip(chip, chipStack);
+//     }
+// }
+
+const addChipToBetted = (chip) => {
+    if(bettedChips.length > 0) {
+        let currStack = bettedChips[bettedChips.length - 1];
+        let loc = bettedChips.length; // The number of the current stackID
+
+        // Add chip to stack
+        currStack.chips.push(chip);
+
+        // Checks to see if stack is full or not
+        if(currStack.chips.length !== 10) {
+            renderBettedChip(chip, currStack);
+        } else { // If full, create new stack
+            renderBettedChip(chip, currStack);
+            console.log(currStack.chips.length);
+            console.log("Will create new stack");
+            let chipStack = new ChipStack([], loc + 1);
+            bettedChips.push(chipStack);
+        }
+    } else {
+        // Create new chip stack and add the chip to it
+        let stack = new ChipStack([], 1);
+        stack.chips.push(chip);
+        bettedChips.push(stack);
+        renderBettedChip(chip, stack);
+        // Render stack
+        // Render ships
     }
 }
 
+const renderBettedChip = (chip, chipStack) => {
+    let stacksArray = Array.from(bettingMoney.children);
+    let availableRow = stacksArray.find(row => row.childElementCount < 4);
+    if(stacksArray.length > 0) {
+        if(availableRow !== undefined) {
+            if(chipStack.chips.length !== 10) {
+                let loc = chipStack.chips.length;
+                console.log("Location to set: " + loc);
+                let rowArray = Array.from(availableRow.children);
+                let stackDiv = rowArray[rowArray.length - 1];
+                stackDiv.appendChild(chip.render(loc));   
+                console.log("Stack ID: " + chipStack.stackID);
+            } else {
+                console.log("Stack ID: " + chipStack.stackID);
+                console.log("Test");
+                if(chipStack.chips.length === 10) {
+                    let loc = chipStack.chips.length;
+                    let rowArray = Array.from(availableRow.children);
+                    let stackDiv = rowArray[rowArray.length - 1];
+                    stackDiv.appendChild(chip.render(loc));
+                    if(availableRow.childElementCount !== 3) {
+                        console.log("Should create new chip stack div")
+                        let chipStackDiv = chipStack.render(true);
+                        //chipStackDiv.appendChild(chip.render(1));
+                        availableRow.appendChild(chipStackDiv);
+                    } else {
+                        console.log("Will create new chip stack here 2");
+                        let chipStackDiv = chipStack.render(true);
+                        let moneyRow = document.createElement('div');
+                        moneyRow.classList.add("money-row");
+                        moneyRow.classList.add("money-row-flipped");
+                        chipStackDiv.appendChild(chip.render(1))
+                        moneyRow.appendChild(chipStackDiv);
+                        bettingMoney.appendChild(moneyRow);    
+                    }
+                }
+            }
+        } else {
+            // No more space to add chips
+            console.log("test");
+            if(stacksArray.length !== 2) {
+                console.log("Will create new chip stack here 2");
+                let chipStackDiv = chipStack.render(true);
+                let moneyRow = document.createElement('div');
+                moneyRow.classList.add("money-row");
+                moneyRow.classList.add("money-row-flipped");
+                chipStackDiv.appendChild(chip.render(1))
+                moneyRow.appendChild(chipStackDiv);
+                bettingMoney.appendChild(moneyRow);
+            }
+        }
+    } else {
+        console.log("CREATED NEW");
+        let chipStackDiv = chipStack.render(true);
+        let moneyRow = document.createElement('div');
+        moneyRow.classList.add("money-row");
+        moneyRow.classList.add("money-row-flipped");
+        chipStackDiv.appendChild(chip.render(1))
+        moneyRow.appendChild(chipStackDiv);   
+        bettingMoney.appendChild(moneyRow);
+    }
+}
+
+const chipBtn = (e) => {
+    let raise = lowerOrRaiseBtn.classList.contains('raise') ? true : false;
+    let chipBtn = e.target
+    let chipValue = chipBtn.dataset.value;
+    addChipToBetted(new Chip(parseInt(chipValue)));
+    // if(raise) {
+    //     if(player1.canBet(chipValue)) {
+
+    //     } else {
+    //         // Do not do anything
+    //     }
+    //     if(!player1.hasChip(chipValue, bettedChips)) {
+    //         chipBtn.removeEventListener('click', chipBtn);
+    //     }
+    // } else {
+
+    // }
+}
+
 const openBettingScreen = () => {
-    //changeGameButtons(false);
     gameOverlay.classList.add("show");
     bettingOverlay.classList.add("show");
 
