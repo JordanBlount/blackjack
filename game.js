@@ -495,7 +495,6 @@ class Dealer extends Player {
             let items = Array.from(set.childNodes);
             items.map(card => {
                 // TODO: Add a global variable to change the game color
-                console.log(card);
                 card.classList.remove("flipped-red");
             });
         });
@@ -612,7 +611,7 @@ const checkForRoundWinner = () => {
             player1.removeCash(player1.currentBet());
             openResultScreen("You busted!");
         } else if(player1.points === 21) {
-            player1.addCash(player.currentBet())
+            player1.addCash(player1.currentBet())
             openResultScreen("Blackjack!");
         } else if(dealer.points === 21) {
             player1.removeCash(player1.currentBet());
@@ -624,7 +623,6 @@ const checkForRoundWinner = () => {
                 // Send "You win message"
                 // Update module or buttons (to be able to prompt for next round)
                 player1.addCash(player1.currentBet());
-                console.log("Got here");
                 openResultScreen("You win!");
             } else if(dealer.points > player1.points && !dealer.isBusted()) {
                 // Dealer wins
@@ -647,7 +645,7 @@ const checkForRoundWinner = () => {
 
 const resetForNewRound = () => {
     player1.hand = [];
-    // player1.bet = 0; 
+    // player1.bet = 0;
     player1.points = 0;
 
     dealer.hand = [];
@@ -660,11 +658,9 @@ const resetForNewRound = () => {
     deck = createDeck();
     deck.shuffle();
 
-    //setGameButtons("not");
     dealer.dealTwoCards(deck, player1);
     updatePoints(player1.points);
     dealer.dealTwoCards(deck, dealer);
-    // Remove any winning notifications or things like that
 }
 
 const totalReset = () => {
@@ -674,11 +670,12 @@ const totalReset = () => {
     currentTurn = 1;
     round = 1;
     gameStarted = false;
+    bettedChips = []; // Makes sure that there are no chips still being betted once whole game is over
 
     p1Cards.innerHTML = "";
     dCards.innerHTML = "";
     // Open intro screen
-    openStartScreen();
+    // openStartScreen();
 }
 
 const nextRound = () => {
@@ -704,13 +701,11 @@ const gameOver = () => {
     if(player1.isBroke()) {
         // You lost the game!
         // Play again?
-        totalReset();
-        setupGame(false);
+        displayEndScreen(false);
     } else {
         // Show winning screen!
-        // Player again?
-        totalReset();
-        setupGame(false);
+        // Play again?
+        displayEndScreen(true);
     }
 }
 
@@ -784,7 +779,6 @@ const setGameButtons = (firstGame) => {
 
     } else if(firstGame === "removeNext") {
         btnsContainer.removeChild(nextBtn);   
-        console.log("Removed next button");
     }
     if(betBtn === null) {
         betBtn = document.createElement('button');
@@ -1087,14 +1081,36 @@ const finalizeBet = () => {
     changeGameButtons("not");
 }
 
-const displayOnGameOverlay = (screen) => {
-    // Removes all previous screen that were being displayed
-    if(gameOverlay.children.length > 0) {
-        let oldScreen = gameOverlay.children[0];
-        oldScreen.classList.remove("show");
-        gameOverlay.removeChild(oldScreen);
+// const displayOnGameOverlay = (screen) => {
+//     // Removes all previous screen that were being displayed
+//     if(gameOverlay.children.length > 0) {
+//         let oldScreen = gameOverlay.children[0];
+//         oldScreen.classList.remove("show");
+//         gameOverlay.removeChild(oldScreen);
+//     }
+//     gameOverlay.appendChild(screen);
+// }
+
+let winnerOrLoser = document.querySelector('#winnerOrLoser');
+let finalText = document.querySelector('#finalText');
+let playAgain = document.querySelector('#play-again');
+
+const displayEndScreen = (won) => {
+    gameOverlay.classList.add('show');
+    winnerOrLoser.classList.add('show');
+    if(won) {
+        finalText.innerHTML = "You have won the game!";
+    } else {
+        finalText.innerHTML = "You went completely broke!";
     }
-    gameOverlay.appendChild(screen);
+    playAgain.addEventListener('click', closeEndScreen);
+}
+
+const closeEndScreen = () => {
+    gameOverlay.classList.remove('show');
+    winnerOrLoser.classList.remove('show');
+    totalReset()
+    setupGame(false);
 }
 
 let resultScreenIsOpen = false;
@@ -1114,7 +1130,6 @@ const openResultScreen = (resultText) => {
 }
 
 const closeResultScreen = (target) => {
-    console.log("This is run immediately");
     if(resultScreen.classList.contains('show')) {
         if(resultScreenIsOpen) {
             resultScreenIsOpen = false;

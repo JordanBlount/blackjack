@@ -24,9 +24,10 @@
 
     <div class="table">
         <div class="border">  
-            <div class="surface container">
+            <div class="surface container" id="surface">
                 <div class="game-rules surfaces">
                     <!-- This technically doesn't exist. HI! -->
+                    <!-- Will be used if I expand this to a desktop app -->
                 </div>
                 <div class="dealer-cards surfaces">
                     <div class="card-container" id="dealer-cards">
@@ -206,9 +207,13 @@
                             <button class="betting-btn" id="place-bet">Place</button>
                         </div>
                     </div>
+                    <div class="winnerOrLoser" id="winnerOrLoser">
+                        <p class="finalText" id="finalText">Winner!</p>
+                        <button class="play-again" id="play-again">Play Again</button>
+                    </div>
                 </div>
-                <div class="results-overlay">
-                    
+                <div class="results-overlay" id="results-overlay">
+                    <h1 class="result" id="result">It's a tie</h1>
                 </div>
             </div>
         </div>

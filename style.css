@@ -731,7 +731,8 @@ header {
     grid-area: chip_100_btn;
 }
 
-.betting-btns {
+.betting-btns,
+.play-again {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -739,7 +740,8 @@ header {
     margin-bottom: 1em;
 }
 
-.betting-btn {
+.betting-btn,
+.play-again {
     width: 125px;
     height: 50px;
     color: white;
@@ -752,11 +754,13 @@ header {
     margin-right: 0.5em;
 }
 
-.betting-btn:hover {
+.betting-btn:hover,
+.play-again:hover {
     background-color: rgb(134, 134, 134);
 }
 
-.betting-btn:active {
+.betting-btn:active ,
+.play-again:active{
     background-color: rgb(58, 58, 58);
 }
 
@@ -809,6 +813,53 @@ header {
     text-align: center;
 }
 
+.results-overlay {
+    display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.80);
+    border-radius: 10px;
+    padding: 0.25em 0em;
+    width: 80%;
+}
+
+.results-overlay.show {
+    display: block;
+}
+
+.result {
+    text-align: center;
+    font-size: 3rem;
+    text-shadow: 0px 5px 5px rgba(0, 0, 0, 0.50);
+}
+
+.winnerOrLoser {
+    display: none;
+    width: 80%;
+    height: 80%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.85);
+    border-radius: 5px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    /* May remove this if I add a
+       nicer screen */
+    text-align: center;
+}
+
+.winnerOrLoser.show {
+    display: flex;
+}
+
+.finalText {
+    font-size: 3rem;
+    margin-bottom: 0.5em;
+}
+
 /* 
 
 This is going to be how I do everything for desktop.
@@ -850,6 +901,10 @@ The game needs to be mobile first
 
     .betting-area-container {
         flex-direction: row;
+    }
+
+    .results-overlay {
+        width: 40%;
     }
 }
 
