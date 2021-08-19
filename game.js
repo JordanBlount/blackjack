@@ -46,7 +46,7 @@ class Card {
             if(currentSet.childElementCount == (player.isDealer ? 3 : 4)) {
                 let cardSet = document.createElement("div");
                 cardSet.classList.add("card-set");
-                cardSet.classList.add(`set_${setId + 1}`);
+                cardSet.classList.add(`set_${allSets.length + 1}`);
                 cardSet.appendChild(this.HTML(player.isDealer, 1));
                 container.appendChild(cardSet);
             } else {
@@ -488,6 +488,19 @@ class Dealer extends Player {
         player.addCards(crd);
     }
 
+    flip() {
+        let container = document.querySelector('#dealer-cards');  
+        let allSets = Array.from(container.querySelectorAll('.card-set'));
+        allSets.map(set => {
+            let items = Array.from(set.childNodes);
+            items.map(card => {
+                // TODO: Add a global variable to change the game color
+                console.log(card);
+                card.classList.remove("flipped-red");
+            });
+        });
+    }
+
 }
 
 let player1 = null;
@@ -516,7 +529,6 @@ const changeTurns = () => {
 const hit = (player) => {
     if(!player.isBusted()) {
         dealer.dealCard(deck, player);
-        console.log(player.hand);
 
         if(!player.isDealer) {
             updatePoints(player.points);
@@ -561,7 +573,7 @@ const setupGame = (firstGame) => {
     console.log("Game was setup");
     console.log("Current Round: " + round);
 
-    setGameButtons(firstGame);
+    setGameButtons();
     dealer.dealTwoCards(deck, player1);
     updatePoints(player1.points);
     dealer.dealTwoCards(deck, dealer);
@@ -595,16 +607,16 @@ const checkForRoundWinner = () => {
     if(!player1.isBroke()) {
         if(!player1.isBusted() && dealer.isBusted()) {
             player1.addCash(player1.currentBet());
-            checkIfOver();
+            openResultScreen(`${dealer.name} busted!`);
         } else if(player1.isBusted() && !dealer.isBusted()) {
             player1.removeCash(player1.currentBet());
-            checkIfOver();
+            openResultScreen("You busted!");
         } else if(player1.points === 21) {
             player1.addCash(player.currentBet())
-            checkIfOver();
+            openResultScreen("Blackjack!");
         } else if(dealer.points === 21) {
-            player1.removeCash(player.currentBet());
-            checkIfOver();
+            player1.removeCash(player1.currentBet());
+            openResultScreen("Dealer got 21!");
         } else {
             // Neither player has busted
             if(player1.points > dealer.points && !player1.isBusted()) {
@@ -612,21 +624,22 @@ const checkForRoundWinner = () => {
                 // Send "You win message"
                 // Update module or buttons (to be able to prompt for next round)
                 player1.addCash(player1.currentBet());
-                checkIfOver();
+                console.log("Got here");
+                openResultScreen("You win!");
             } else if(dealer.points > player1.points && !dealer.isBusted()) {
                 // Dealer wins
                 // Send "You lose message"
                 // Update module or buttons (to be able to prompt for next round)
                 player1.removeCash(player1.currentBet());
-                checkIfOver();
+                openResultScreen("You lose!");
             } else if(player1.points === dealer.points) {
                 // It's a tie
                 // Player loses no money
-                console.log("You all tied");
-                checkIfOver();
+                openResultScreen("It's a tie!");
             }
         }
     } else {
+        console.log("SHOULD NOT");
         checkIfOver();
     }
 }
@@ -647,7 +660,7 @@ const resetForNewRound = () => {
     deck = createDeck();
     deck.shuffle();
 
-    setGameButtons(false);
+    //setGameButtons("not");
     dealer.dealTwoCards(deck, player1);
     updatePoints(player1.points);
     dealer.dealTwoCards(deck, dealer);
@@ -740,6 +753,7 @@ const openRulesScreen = () => {
     // `;
     // rules.innerHTML = gameRules;
     // rulesScreen.classList.add('show');
+    
     openStartScreen();
     //testing();
 }
@@ -755,7 +769,8 @@ closeRulesBtn.addEventListener('click', closeRulesScreen);
 let btnsContainer = document.querySelector("#btns");
 let betBtn = null;
 let hitBtn = null;
-let holdBtn = null;
+let stayBtn = null;
+let nextBtn = null;
 
 let betInput = document.querySelector("#betting-amount");
 let cashAmt = document.querySelector("#player-currentMoney");
@@ -765,16 +780,18 @@ let p1Cards = document.querySelector("#player-cards");
 let dCards = document.querySelector("#dealer-cards");
 
 const setGameButtons = (firstGame) => {
-    if(!firstGame) {
-        btnsContainer.removeChild(hitBtn);
-        btnsContainer.removeChild(stayBtn);
-        hitBtn.addEventListener('click', hitAction);
-        stayBtn.addEventListener('click', stayAction);
+    if(firstGame === "not") {
+
+    } else if(firstGame === "removeNext") {
+        btnsContainer.removeChild(nextBtn);   
+        console.log("Removed next button");
     }
-    betBtn = document.createElement('button');
-    betBtn.classList.add('game-btn');
-    betBtn.classList.add('bet-btn');
-    betBtn.innerHTML = "Bet";
+    if(betBtn === null) {
+        betBtn = document.createElement('button');
+        betBtn.classList.add('game-btn');
+        betBtn.classList.add('bet-btn');
+        betBtn.innerHTML = "Bet";
+    }
     betBtn.addEventListener('click', finalizeBet);
     btnsContainer.appendChild(betBtn);
 
@@ -783,7 +800,7 @@ const setGameButtons = (firstGame) => {
 }
 
 const changeGameButtons = (betting) => {
-    if(!betting) {
+    if(betting === "not") {
         btnsContainer.removeChild(betBtn);
         betBtn.removeEventListener('click', openBettingScreen);
 
@@ -792,22 +809,36 @@ const changeGameButtons = (betting) => {
         betInput.classList.add('no-hover');
         betInput.removeEventListener('click', openBettingScreen);
 
-        hitBtn = document.createElement('button');
-        stayBtn = document.createElement('button');
-
-        hitBtn.classList.add('game-btn');
-        hitBtn.innerHTML = "Hit";
-
-        stayBtn.classList.add('game-btn');
-        stayBtn.innerHTML = "Hold";
+        if(hitBtn === null && stayBtn === null) {
+            hitBtn = document.createElement('button');
+            stayBtn = document.createElement('button');
+    
+            hitBtn.classList.add('game-btn');
+            hitBtn.innerHTML = "Hit";
+    
+            stayBtn.classList.add('game-btn');
+            stayBtn.innerHTML = "Stay";
+        }
         
         hitBtn.addEventListener('click', hitAction);
         stayBtn.addEventListener('click', stayAction);
 
         btnsContainer.appendChild(hitBtn);
         btnsContainer.appendChild(stayBtn);
+    } else if(betting === "next") {
+        btnsContainer.removeChild(hitBtn);
+        btnsContainer.removeChild(stayBtn);
+        hitBtn.removeEventListener('click', hitAction);
+        stayBtn.removeEventListener('click', stayAction); 
+
+        if(nextBtn === null) {
+            nextBtn = document.createElement('button');
+            nextBtn.classList.add('game-btn');
+            nextBtn.innerHTML = "Next";
+        }
+        btnsContainer.appendChild(nextBtn);
     } else {
-        setGameButtons(true);
+        setGameButtons();
     }
 }
 
@@ -1053,6 +1084,7 @@ const finalizeBet = () => {
         // TODO: Add some logic here that gives a visual cue
         console.log("LOLOL");
     }
+    changeGameButtons("not");
 }
 
 const displayOnGameOverlay = (screen) => {
@@ -1063,4 +1095,37 @@ const displayOnGameOverlay = (screen) => {
         gameOverlay.removeChild(oldScreen);
     }
     gameOverlay.appendChild(screen);
+}
+
+let resultScreenIsOpen = false;
+let resultScreen = document.querySelector('#results-overlay');
+let result = document.querySelector('#result');
+let surface = document.querySelector('#surface')
+
+const openResultScreen = (resultText) => {
+    result.innerHTML = resultText;
+    resultScreen.classList.add("show");
+
+    // Any game logic to happen right before a round is reset
+    dealer.flip();
+    changeGameButtons("next");
+
+    surface.addEventListener('click', closeResultScreen);
+}
+
+const closeResultScreen = (target) => {
+    console.log("This is run immediately");
+    if(resultScreen.classList.contains('show')) {
+        if(resultScreenIsOpen) {
+            resultScreenIsOpen = false;
+            resultScreen.classList.remove("show");
+            surface.removeEventListener('click', closeResultScreen);
+
+            // Logic to check if game has ended.
+            setGameButtons("removeNext"); // Removes the next button and returns the Bet button
+            checkIfOver();
+        } else {
+            resultScreenIsOpen = true;
+        }
+    }
 }
