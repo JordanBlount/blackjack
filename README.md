@@ -43,4 +43,4 @@ There are 8 total rounds in my game.
 
 ## Authors
 
-- [@jordanblount](
+- [@jordanblount](https://jordanblount.com)
