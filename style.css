@@ -887,6 +887,9 @@ The game needs to be mobile first
         margin-bottom: 0rem;
     }
 
+    .results-overlay {
+        width: 40%;
+    }
     
 }
 
@@ -901,10 +904,6 @@ The game needs to be mobile first
 
     .betting-area-container {
         flex-direction: row;
-    }
-
-    .results-overlay {
-        width: 40%;
     }
 }
 

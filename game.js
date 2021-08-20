@@ -176,6 +176,10 @@ class ChipStack {
         this.chips.push(chip);
     }
 
+    chipsArr() {
+        return this.chips;
+    }
+
     render(flipped) {
         let chipStackDiv = document.createElement("div");
         chipStackDiv.classList.add('chip-stack');
@@ -738,19 +742,16 @@ const startGame = () => {
 }
 
 const openRulesScreen = () => {
-    // let gameRules = `
-    // This is Blackjack. You are the player. The House is the computer. The rules of the game
-    // are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
-    // will win the round. There are 8 rounds in total. If you successfully stay alive without losing
-    // all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
+    let gameRules = `
+    This is Blackjack. You are the player. The House is the computer. The rules of the game
+    are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
+    will win the round. There are 8 rounds in total. If you successfully stay alive without losing
+    all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
 
-    // Good luck!
-    // `;
-    // rules.innerHTML = gameRules;
-    // rulesScreen.classList.add('show');
-    
-    openStartScreen();
-    //testing();
+    Good luck!
+    `;
+    rules.innerHTML = gameRules;
+    rulesScreen.classList.add('show');
 }
 
 const closeRulesScreen = () => {
@@ -865,8 +866,7 @@ let gameOverlay = document.querySelector('#game-overlay');
 let bettingOverlay = document.querySelector('#betting-overlay');
 let currentMoney = document.querySelector('#current-money');
 let currentBet = document.querySelector('#current-bet');
-let bettingMoney = document.querySelector('#betting-money');
-let stacksArray = Array.from(bettingMoney.children);
+let bettingContainer = document.querySelector('#betting-container');
 
 
 let bettingChipBtns = Array.from(document.querySelector('#betting-chip-btns').children);
@@ -895,129 +895,98 @@ const placeBetAction = () => {
 }
 
 let bettedChips = [];
-
-// const addChipToBetted = (chip) => {
-//     if(bettedChips.length > 0) {
-//         let stack = bettedChips[bettedChips.length - 1];
-//         let loc = bettedChips.length;
-//         // Checks to see if the current stack has less than 12 chips
-//         //console.log(stack);
-//         if(stack.chips.length !== 10) {
-//             console.log("This 1");
-//             stack.chips.push(chip);
-//             console.log("Number of chips in stack: " + stack.chips.length);
-//             renderBettedChip(chip, stack);
-//         } else {
-//             // Creates a new stack with one chip
-//             console.log("This 2");
-//             console.log(loc);
-//             let chipStack = new ChipStack([], loc + 1);
-//             chipStack.chips.push(chip);
-//             console.log("Number of chips in old stack: " + stack.chips.length);
-//             console.log("Number of chips in new stack: " + chipStack.chips.length);
-//             bettedChips.push(chipStack);
-//             renderBettedChip(chip, chipStack);
-//         }
-//     } else {
-//         // Creates a new stack and puts a chip in it
-//         console.log("The new stack was made in addChipToBetted");
-//         let chipStack = new ChipStack([], 1);
-//         chipStack.chips.push(chip);
-//         bettedChips.push(chipStack);
-//         renderBettedChip(chip, chipStack);
-//     }
-// }
+let renderedChips = [];
 
 const addChipToBetted = (chip) => {
     if(bettedChips.length > 0) {
         let currStack = bettedChips[bettedChips.length - 1];
-        let loc = bettedChips.length; // The number of the current stackID
+        let loc = currStack.stackID + 1;
 
         // Add chip to stack
         currStack.chips.push(chip);
 
-        // Checks to see if stack is full or not
-        if(currStack.chips.length !== 10) {
+        // Checks to see if the current stack is full
+        if(currStack.chips.length === 10) {
+            // render current chip
             renderBettedChip(chip, currStack);
-        } else { // If full, create new stack
+
+            //console.log("This stack is now full");
+
+            // Creates a new stack
+            let newStack = new ChipStack([], loc);
+            bettedChips.push(newStack);
+        } else {
+            // Renders chip as normal
             renderBettedChip(chip, currStack);
-            console.log(currStack.chips.length);
-            console.log("Will create new stack");
-            let chipStack = new ChipStack([], loc + 1);
-            bettedChips.push(chipStack);
         }
     } else {
-        // Create new chip stack and add the chip to it
+        // Create initial chip stack and add the chip to it
         let stack = new ChipStack([], 1);
         stack.chips.push(chip);
         bettedChips.push(stack);
         renderBettedChip(chip, stack);
-        // Render stack
-        // Render ships
     }
 }
 
 const renderBettedChip = (chip, chipStack) => {
-    let stacksArray = Array.from(bettingMoney.children);
-    let availableRow = stacksArray.find(row => row.childElementCount < 4);
-    if(stacksArray.length > 0) {
-        if(availableRow !== undefined) {
-            if(chipStack.chips.length !== 10) {
-                let loc = chipStack.chips.length;
-                console.log("Location to set: " + loc);
-                let rowArray = Array.from(availableRow.children);
-                let stackDiv = rowArray[rowArray.length - 1];
-                stackDiv.appendChild(chip.render(loc));   
-                console.log("Stack ID: " + chipStack.stackID);
-            } else {
-                console.log("Stack ID: " + chipStack.stackID);
-                console.log("Test");
-                if(chipStack.chips.length === 10) {
-                    let loc = chipStack.chips.length;
-                    let rowArray = Array.from(availableRow.children);
-                    let stackDiv = rowArray[rowArray.length - 1];
-                    stackDiv.appendChild(chip.render(loc));
-                    if(availableRow.childElementCount !== 3) {
-                        console.log("Should create new chip stack div")
-                        let chipStackDiv = chipStack.render(true);
-                        //chipStackDiv.appendChild(chip.render(1));
-                        availableRow.appendChild(chipStackDiv);
-                    } else {
-                        console.log("Will create new chip stack here 2");
-                        let chipStackDiv = chipStack.render(true);
-                        let moneyRow = document.createElement('div');
-                        moneyRow.classList.add("money-row");
-                        moneyRow.classList.add("money-row-flipped");
-                        chipStackDiv.appendChild(chip.render(1))
-                        moneyRow.appendChild(chipStackDiv);
-                        bettingMoney.appendChild(moneyRow);    
-                    }
-                }
-            }
+    // This means that we have a stack already in there
+    let rows = Array.from(bettingContainer.children);
+    if(bettingContainer.children.length > 0) {
+        let lastRow = rows[rows.length - 1];
+        let lastRowArray = Array.from(lastRow.children);
+        let lastStack = lastRowArray[lastRowArray.length - 1];
+        let availableRow = null;
+        if(lastStack.children.length < 10) {
+            availableRow = lastRow;
         } else {
-            // No more space to add chips
-            console.log("test");
-            if(stacksArray.length !== 2) {
-                console.log("Will create new chip stack here 2");
-                let chipStackDiv = chipStack.render(true);
-                let moneyRow = document.createElement('div');
-                moneyRow.classList.add("money-row");
-                moneyRow.classList.add("money-row-flipped");
-                chipStackDiv.appendChild(chip.render(1))
-                moneyRow.appendChild(chipStackDiv);
-                bettingMoney.appendChild(moneyRow);
+            if(lastRow.children.length < 3) { // We set the max amount of stacks that can appear on the screen
+                availableRow = lastRow;
+            } else {
+                availableRow = createNewRow(rows.length + 1);
             }
         }
-    } else {
-        console.log("CREATED NEW");
-        let chipStackDiv = chipStack.render(true);
-        let moneyRow = document.createElement('div');
-        moneyRow.classList.add("money-row");
-        moneyRow.classList.add("money-row-flipped");
-        chipStackDiv.appendChild(chip.render(1))
-        moneyRow.appendChild(chipStackDiv);   
-        bettingMoney.appendChild(moneyRow);
+        if(availableRow === lastRow) {
+            if(lastStack.children.length === 10) {
+                let newStack = chipStack.render(true);
+                newStack.appendChild(chip.render(newStack.children.length + 1));
+                availableRow.appendChild(newStack);
+                renderedChips.push(chip);
+            } else {
+                let stackDiv = lastRowArray[lastRowArray.length - 1];
+                stackDiv.appendChild(chip.render(stackDiv.children.length + 1));
+                renderedChips.push(chip);
+            }
+        } else { // IF it is a new row
+            if(rows.length !== 2) { // Limited to only two money rows
+                let newStackDiv = chipStack.render(true);
+                newStackDiv.appendChild(chip.render(1));
+                availableRow.appendChild(newStackDiv);
+                bettingContainer.append(availableRow);
+                renderedChips.push(chip);
+            }
+        }        
+    } else { // We don't have any rows
+        if(rows.length !== 2) { // Limited to only two money rows 
+            let chipStackDiv = chipStack.render(true);
+            let moneyRow = createNewRow(1);
+            chipStackDiv.appendChild(chip.render(1))
+            moneyRow.appendChild(chipStackDiv);
+            bettingContainer.appendChild(moneyRow);
+            renderedChips.push(chip);
+        }
     }
+}
+
+const removeChips = (chip) => {
+
+}
+
+const createNewRow = (loc) => {
+    let moneyRow = document.createElement('div');
+    moneyRow.classList.add("money-row");
+    moneyRow.classList.add("money-row-flipped");
+    moneyRow.classList.add(`row_${loc}`);
+    return moneyRow;    
 }
 
 const chipBtn = (e) => {
@@ -1144,3 +1113,5 @@ const closeResultScreen = (target) => {
         }
     }
 }
+
+openStartScreen();
