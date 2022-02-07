@@ -1,4 +1,3 @@
-//let suit = ["♣", "♦", "♥","♠"]
 let suit = ["clubs", "diamonds", "hearts", "spades"]
 let values = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"];
 
@@ -193,7 +192,7 @@ class ChipStack {
 
 // TODO: Add this variable below and the function to the player class
 
-let chips = [[],[],[],[]];
+//let chips = [[],[],[],[]];
 
 class Player {
 
@@ -505,6 +504,13 @@ class Dealer extends Player {
     }
 
 }
+
+
+//
+// The game logic itself
+//
+//
+//
 
 let player1 = null;
 let dealer = null;
@@ -1151,6 +1157,13 @@ const closeResultScreen = (target) => {
     }
 }
 
+
+//
+//
+// The game sounds
+//
+//
+
 let sound_bet_set = document.querySelector('#sound-bet_set');
 let sound_chip_1 = document.querySelector('#sound-chip_1');
 let sound_dealing_cards = document.querySelector('#sound-dealing_cards');
@@ -1206,5 +1219,9 @@ const playSound = (name) => {
             break;
     }
 }
+
+//
+// Start of the game! Open the initial screen
+//
 
 openStartScreen();
