@@ -766,15 +766,15 @@ const startGame = () => {
 }
 
 const openRulesScreen = () => {
-    let gameRules = `
-    This is Blackjack. You are the player. The House is the computer. The rules of the game
-    are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
-    will win the round. There are 8 rounds in total. If you successfully stay alive without losing
-    all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
+    // let gameRules = `
+    // This is Blackjack. You are the player. The House is the computer. The rules of the game
+    // are very simple. Whoever gets closer to 21 (or gets 21) wins OR whoever does not bust first
+    // will win the round. There are 8 rounds in total. If you successfully stay alive without losing
+    // all of your money during these 8 rounds, you will win the game. You also win if you reach $2000.
 
-    Good luck!
-    `;
-    rules.innerHTML = gameRules;
+    // \nGood luck!
+    // `;
+    // rules.innerHTML = gameRules;
     rulesScreen.classList.add('show');
 }
 
